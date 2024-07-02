@@ -1,0 +1,33 @@
+{
+  "audios": {
+    "audio": {
+      "artist": "macan",
+      "duration": 123,
+      "id": 1,
+      "mediaUrl": "//storage4.lightaudio.ru/dm/3996f366/5987de6be/vzk1ll%20turbo%202000%20%E2%80%94%20remind%20%28%40nightcorebot%29.mp3",
+      "photoUrl": "https://is5-ssl.mzstatic.com/image/thumb/Music112/v4/51/ec/2a/51ec2a10-adaa-0e1e-044d-1de361bd08fb/8058365980248.jpg/400x400cc.jpg",
+      "title": "asd"
+    }
+  },
+  "playlists": {
+    "playlist": {
+      "audios_id": {
+        "audio_id": 1
+      },
+      "id": 1,
+      "owner_id": 1,
+      "photoUrl": "https://sun1-89.userapi.com/s/v1/if2/s3V1Xkkqew9S8GWBcqIcf6dVIFwYecnY-nBNRrh-7kUNFp-UMlmzPyL87d_V2lIFZ2zyhLYiILhsZ_p0JIcYPdm-.jpg?quality=95&crop=0,0,2560,2560&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640,720x720,1080x1080,1280x1280,1440x1440,2560x2560&ava=1&u=xjMy32-VPVWkDj1X4RoZcOC4kbENPYo1Rh-nck8A_lU&cs=200x200",
+      "title": "zhopa"
+    }
+  },
+  "users": {
+    "user": {
+      "id": "asd",
+      "name": "asd",
+      "photoUrl": "https://img.razrisyika.ru/kart/138/549128-homyak-milyy-2.jpg",
+      "playlists": {
+        "playlist_id": 1
+      }
+    }
+  }
+}

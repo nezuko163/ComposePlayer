@@ -33,11 +33,25 @@ android {
 }
 
 dependencies {
-
+    implementation(project(":domain"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+
+    // MediaFacer
+    implementation(libs.mediafacer)
+
+    // service
+    implementation(libs.androidx.legacy.support.v4)
+
+    // media что-то там for notifications
+    implementation(libs.androidx.media)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.google.firebase.auth)
+    implementation(libs.firebase.database)
+
+    // coroutines
+    implementation(libs.kotlinx.coroutines.android)
+
 }

@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
@@ -29,7 +30,10 @@ import org.koin.dsl.koinApplication
 
 @Composable
 fun MyBottomNavigation(navController: NavController) {
-    BottomNavigation(windowInsets = BottomNavigationDefaults.windowInsets) {
+    BottomNavigation(
+        windowInsets = BottomNavigationDefaults.windowInsets,
+        backgroundColor = Color.Cyan,
+    ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route ?: BottomTabs.HOME.route
 
@@ -44,9 +48,16 @@ fun MyBottomNavigation(navController: NavController) {
                 onClick = {
                     if (tab.route != currentRoute) {
                         navController.navigate(tab.route) {
-                            navController.graph.startDestinationRoute?.let { popUpTo(it) {
-                                saveState = true
+                            anim {
+                                enter = 0
+                                exit = 0
+                                popEnter = 0
+                                popExit = 0
                             }
+                            navController.graph.startDestinationRoute?.let {
+                                popUpTo(it) {
+                                    saveState = true
+                                }
                             }
                             launchSingleTop = true
                             restoreState = true
@@ -64,6 +75,7 @@ fun MyBottomNavigation(navController: NavController) {
                 },
                 alwaysShowLabel = false,
                 unselectedContentColor = LocalContentColor.current,
+                selectedContentColor = Color.White,
                 modifier = Modifier.navigationBarsPadding()
             )
         }
