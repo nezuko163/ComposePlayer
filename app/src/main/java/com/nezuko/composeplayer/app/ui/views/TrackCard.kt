@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Surface
 import androidx.compose.material3.CardDefaults
@@ -47,10 +48,9 @@ fun TrackCard(
     audio: Audio,
     onTrackClick: (Audio) -> Unit = {},
     onDotsClick: (Audio) -> Unit = {},
-    modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .height(70.dp),
         onClick = { onTrackClick.invoke(audio) },
@@ -64,11 +64,20 @@ fun TrackCard(
                     .width(55.dp)
 
             ) {
-                AsyncImage(
-                    model = audio.artUrl,
+//                AsyncImage(
+//                    model = audio.artUrl,
+//                    contentDescription = "123",
+//                    modifier = modifier.align(Alignment.Center),
+//                    error = painterResource(id = com.nezuko.data.R.drawable.img)
+//                )
+                Image(
+                    painter = rememberAsyncImagePainter(
+                        model = audio.artUrl, error = painterResource(
+                            id = com.nezuko.data.R.drawable.img
+                        )
+                    ),
                     contentDescription = "123",
-                    modifier = modifier.align(Alignment.Center),
-                    error = painterResource(id = com.nezuko.data.R.drawable.img)
+                    modifier = Modifier.align(Alignment.Center),
                 )
             }
             Column(
@@ -91,23 +100,14 @@ fun TrackCard(
                 )
             }
 
-//            Image(
-//                modifier = Modifier
-//                    .padding(vertical = 25.dp)
-//                    .background(Color.White)
-//                    .clickable { onDotsClick.invoke(audio) },
-//                painter = painterResource(id = R.drawable.dots),
-//                contentDescription = "больше",
-//                contentScale = ContentScale.Fit,
-//            )
-
-            AsyncImage(
-                model = R.drawable.dots, contentDescription = "жопа",
+            Image(
                 modifier = Modifier
-                    .padding(vertical = 20.dp)
+                    .padding(vertical = 25.dp)
                     .background(Color.White)
                     .clickable { onDotsClick.invoke(audio) },
-                contentScale = ContentScale.Fit
+                painter = painterResource(id = R.drawable.dots),
+                contentDescription = "больше",
+                contentScale = ContentScale.Fit,
             )
         }
     }

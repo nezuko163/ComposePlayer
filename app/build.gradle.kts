@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.nezuko.composeplayer"
-        minSdk = 33
+        minSdk = 29
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -62,9 +62,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
@@ -87,6 +84,6 @@ dependencies {
     implementation(libs.androidx.material)
     implementation(libs.material3)
 
-    // koil compose
-    implementation("io.coil-kt:coil-compose:2.6.0")
+    // coil compose
+    implementation(libs.coil.compose)
 }
