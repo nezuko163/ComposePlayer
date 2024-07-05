@@ -23,7 +23,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -86,4 +86,7 @@ dependencies {
     // material bottom nav
     implementation(libs.androidx.material)
     implementation(libs.material3)
+
+    // koil compose
+    implementation("io.coil-kt:coil-compose:2.6.0")
 }

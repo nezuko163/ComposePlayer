@@ -21,11 +21,9 @@ fun PlaylistScreen(
     modifier: Modifier = Modifier,
     playlistViewModel: PlaylistViewModel = koinViewModel()
 ) {
+    playlistViewModel.findPlaylist(id)
     val tracks by playlistViewModel.trackList.observeAsState()
 
-    LaunchedEffect(id) {
-        playlistViewModel.findPlaylist(id)
-    }
     Log.i(TAG, "PlaylistScreen: 123")
     TracksList(tracks)
 }

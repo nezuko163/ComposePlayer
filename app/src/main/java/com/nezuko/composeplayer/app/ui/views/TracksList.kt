@@ -4,6 +4,8 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -17,14 +19,33 @@ fun TracksList(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    LazyColumn(modifier = modifier) {
-        trackList?.run {
-            items(trackList) {
-                TrackCard(
-                    it,
-                    { Toast.makeText(context, it.title, Toast.LENGTH_SHORT).show() },
-                    { Toast.makeText(context, "more", Toast.LENGTH_SHORT).show() })
-            }
+//    if (trackList == null) return
+    trackList?.run {
+        LazyColumn() {
+            items(
+                items = trackList + trackList + trackList + trackList +trackList + trackList,
+                itemContent = {
+                    TrackCard(
+                        audio = it,
+                        onTrackClick = {
+                            Toast.makeText(context, it.title, Toast.LENGTH_SHORT).show()
+                        },
+                        onDotsClick = {}
+                    )
+                }
+            )
         }
+
+//        Column(modifier.verticalScroll(rememberScrollState())) {
+//            (trackList + trackList + trackList + trackList + trackList + trackList).forEach {
+//                TrackCard(
+//                    audio = it,
+//                    onTrackClick = {
+//                        Toast.makeText(context, it.title, Toast.LENGTH_SHORT).show()
+//                    },
+//                    onDotsClick = {}
+//                )
+//            }
+//        }
     }
 }
