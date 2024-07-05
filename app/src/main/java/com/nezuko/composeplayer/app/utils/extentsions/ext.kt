@@ -1,9 +1,5 @@
 package com.nezuko.composeplayer.app.utils.extentsions
 
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavBackStackEntry
@@ -17,7 +13,7 @@ import com.nezuko.composeplayer.app.ui.screens.mainScreen.MainScreen
 import com.nezuko.composeplayer.app.ui.nav.RoutesNames
 import com.nezuko.composeplayer.app.ui.screens.playlistScreen.PlaylistScreen
 import com.nezuko.composeplayer.app.ui.screens.searchScreen.SearchScreen
-import com.nezuko.domain.model.PlaylistModel
+import com.nezuko.domain.model.Playlist
 
 
 const val ID = "id"
@@ -34,8 +30,8 @@ fun NavGraphBuilder.main(
 }
 
 fun NavGraphBuilder.library(
-    onPlaylistClick: (playlist: PlaylistModel) -> Unit,
-    onDotsClick: (PlaylistModel) -> Unit
+    onPlaylistClick: (playlist: Playlist) -> Unit,
+    onDotsClick: (Playlist) -> Unit
 ) {
     composable(
         RoutesNames.MY_LIBRARY_SCREEN,
@@ -64,10 +60,6 @@ fun NavGraphBuilder.playlist() {
             navArgument("id") {
                 type = NavType.LongType
                 nullable = false
-            },
-            navArgument("isRemote") {
-                type = NavType.BoolType
-                nullable = false
             }
         )
 //        enterTransition = { fadeIn(animationSpec = tween(0)) },
@@ -75,17 +67,15 @@ fun NavGraphBuilder.playlist() {
     ) {
         val arguments = requireNotNull(it.arguments)
         val id = arguments.getLong("id")
-        val isRemote = arguments.getBoolean("isRemote")
 
-        PlaylistScreen(id, isRemote)
+        PlaylistScreen(id)
     }
 }
 
 fun NavController.navigateToPlaylistScreen(
-    id: Long,
-    isRemote: Boolean
+    id: Long
 ) {
-    navigate("${RoutesNames.MY_LIBRARY_SCREEN}/{$ID}?$IS_REMOTE={$IS_REMOTE}")
+    navigate("${RoutesNames.MY_LIBRARY_SCREEN}/$id")
 }
 
 fun NavBackStackEntry.lifecycleIsResumed() =

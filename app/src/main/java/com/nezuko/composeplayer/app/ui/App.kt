@@ -1,6 +1,7 @@
 package com.nezuko.composeplayer.app.ui
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -31,7 +32,9 @@ fun App(
     LaunchedEffect(Unit) {
         userViewModel.getCurrentUser()
     }
-    
+    BackHandler {
+        navController.popBackStack()
+    }
     Log.i(TAG, "App: $uid")
     if (uid.isNullOrEmpty()) {
         LoginScreen()

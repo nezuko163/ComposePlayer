@@ -1,7 +1,6 @@
 package com.nezuko.data.repositoryImpl
 
 import android.support.v4.media.session.MediaControllerCompat.TransportControls
-import com.nezuko.domain.model.TrackInfo
 import com.nezuko.domain.repository.PlayerRepository
 
 class PlayerRepositoryImpl(private val transportControls: TransportControls) : PlayerRepository {

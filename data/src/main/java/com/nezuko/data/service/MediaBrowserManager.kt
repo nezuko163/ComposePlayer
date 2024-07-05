@@ -13,15 +13,14 @@ import android.widget.Toast
 import com.nezuko.domain.repository.ApiRepository
 
 
-class MediaBrowserManager(
-    val context: Context,
-    private val connectionRepository: ConnectionCallbackInterface,
-    private val callbackRepository: ControllerCallbackInterface
-) {
+class MediaBrowserManager(val context: Context) {
 
     val TAG = "MEDDIA_MANAGER"
     lateinit var mediaBrowserCompat: MediaBrowserCompat
     lateinit var mediaControllerCompat: MediaControllerCompat
+
+    lateinit var connectionRepository: ConnectionCallbackInterface
+    lateinit var callbackRepository: ControllerCallbackInterface
 
     private val connectionCallback = object : MediaBrowserCompat.ConnectionCallback() {
         override fun onConnected() {

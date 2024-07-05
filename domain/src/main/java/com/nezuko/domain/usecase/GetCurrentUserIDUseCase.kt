@@ -1,7 +1,9 @@
 package com.nezuko.domain.usecase
 
-import com.nezuko.domain.repository.AuthLoginRepository
+import com.nezuko.domain.repository.AuthRepository
 
-class GetCurrentUserIDUseCase(private val impl: AuthLoginRepository) {
+class GetCurrentUserIDUseCase(
+    private val impl: AuthRepository
+) {
     suspend fun execute() = impl.getCurrentUserID()
 }

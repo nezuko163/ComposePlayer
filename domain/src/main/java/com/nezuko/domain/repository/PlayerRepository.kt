@@ -1,7 +1,5 @@
 package com.nezuko.domain.repository
 
-import com.nezuko.domain.model.TrackInfo
-
 interface PlayerRepository {
     fun play()
     fun pause()

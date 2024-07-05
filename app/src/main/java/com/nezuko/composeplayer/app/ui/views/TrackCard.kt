@@ -1,6 +1,7 @@
 package com.nezuko.composeplayer.app.ui.views
 
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,23 +33,23 @@ import androidx.core.net.toUri
 import com.nezuko.composeplayer.R
 import com.nezuko.composeplayer.app.utils.bitmapFromResId
 import com.nezuko.composeplayer.app.utils.getBitmapFromUri
-import com.nezuko.domain.model.AudioModel
-import com.nezuko.domain.model.TrackInfo
+import com.nezuko.domain.model.Audio
 
-val track = TrackInfo("asd", "asd", "asd", "asd", 123L, "")
-val audio = AudioModel(track, "", null)
-@Preview
+
+val TAG = "TRACK_CARD"
+
 @Composable
 fun TrackCard(
-    modifier: Modifier = Modifier,
-    audio: AudioModel = com.nezuko.composeplayer.app.ui.views.audio,
-    onTrackClick: (AudioModel) -> Unit = {},
-    onDotsClick: (AudioModel) -> Unit = {}
+    audio: Audio,
+    onTrackClick: (Audio) -> Unit = {},
+    onDotsClick: (Audio) -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
+    Log.i(TAG, "TrackCard: start")
     var bitmap: Bitmap? = null
-    if (audio.trackInfo.artUri.isNotEmpty()) {
+    if (audio.artUrl.isNotEmpty()) {
         bitmap = getBitmapFromUri(
-            audio.trackInfo.artUri.toUri(),
+            audio.artUrl.toUri(),
             LocalContext.current
         )
     }
@@ -56,6 +57,7 @@ fun TrackCard(
     if (bitmap == null) {
         bitmap = bitmapFromResId(LocalContext.current, com.nezuko.data.R.drawable.img)
     }
+    Log.i(TAG, "TrackCard: end")
 
     Surface(
         modifier = modifier
@@ -88,11 +90,11 @@ fun TrackCard(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = audio.trackInfo.title, modifier = Modifier
+                        text = audio.title, modifier = Modifier
                             .weight(0.5f)
                             .wrapContentHeight(Alignment.CenterVertically)
                     )
-                    Text(text = audio.trackInfo.artist,
+                    Text(text = audio.artist,
                         modifier = Modifier
                             .weight(0.5f)
 //                            .wrapContentHeight(Alignment.CenterVertically)
@@ -111,4 +113,5 @@ fun TrackCard(
             }
         }
     }
+    Log.i(TAG, "TrackCard: ${audio.title}")
 }

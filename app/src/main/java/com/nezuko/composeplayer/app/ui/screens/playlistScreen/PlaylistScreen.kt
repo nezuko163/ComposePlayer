@@ -1,24 +1,31 @@
 package com.nezuko.composeplayer.app.ui.screens.playlistScreen
 
+import android.util.Log
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import com.nezuko.composeplayer.app.ui.views.TrackCard
+import com.nezuko.composeplayer.app.ui.views.TracksList
 import org.koin.androidx.compose.koinViewModel
+
+const val TAG = "PLAYLIST_SCREEN"
 
 @Composable
 fun PlaylistScreen(
     id: Long,
-    isRemote: Boolean,
     modifier: Modifier = Modifier,
     playlistViewModel: PlaylistViewModel = koinViewModel()
 ) {
+    val tracks by playlistViewModel.trackList.observeAsState()
 
-    if (isRemote) {
-        println("todo")
-    } else {
-        if (id != -1L) {
-            playlistViewModel.findLocalPlaylist(id)
-        } else {
-            playlistViewModel.findAllLocalTracksPlaylist()
-        }
+    LaunchedEffect(id) {
+        playlistViewModel.findPlaylist(id)
     }
+    Log.i(TAG, "PlaylistScreen: 123")
+    TracksList(tracks)
 }

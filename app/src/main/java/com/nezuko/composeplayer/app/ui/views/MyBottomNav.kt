@@ -31,20 +31,20 @@ import org.koin.dsl.koinApplication
 @Composable
 fun MyBottomNavigation(navController: NavController) {
     BottomNavigation(
-        windowInsets = BottomNavigationDefaults.windowInsets,
+//        windowInsets = BottomNavigationDefaults.windowInsets,
         backgroundColor = Color.Cyan,
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route ?: BottomTabs.HOME.route
 
-        val routes = remember { BottomTabs.entries.map { it.route } }
+//        val routes = remember { BottomTabs.entries.map { it.route } }
         val tabs = BottomTabs.entries
 
-        if (currentRoute !in routes) return@BottomNavigation
+//        if (currentRoute !in routes) return@BottomNavigation
 
         tabs.forEach { tab ->
             BottomNavigationItem(
-                selected = currentRoute == tab.route,
+                selected = currentRoute.split("/")[0] == tab.route,
                 onClick = {
                     if (tab.route != currentRoute) {
                         navController.navigate(tab.route) {

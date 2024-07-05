@@ -3,7 +3,7 @@ package com.nezuko.data.source.remote
 import android.util.Log
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.nezuko.domain.model.UserModel
+import com.nezuko.domain.model.UserProfile
 
 class ApiRemote {
     private val TAG = "API_REMOTE"
@@ -21,7 +21,7 @@ class ApiRemote {
 
         val userRef = db.child("users")
 
-        val user = UserModel(id, photoUrl, username)
+        val user = UserProfile(id, username, photoUrl, arrayListOf())
 
         userRef.child(id).setValue(user).addOnCompleteListener { task ->
             if (task.isSuccessful) {
