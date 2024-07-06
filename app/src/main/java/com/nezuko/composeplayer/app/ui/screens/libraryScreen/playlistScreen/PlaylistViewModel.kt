@@ -1,4 +1,4 @@
-package com.nezuko.composeplayer.app.ui.screens.playlistScreen
+package com.nezuko.composeplayer.app.ui.screens.libraryScreen.playlistScreen
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -24,14 +24,14 @@ class PlaylistViewModel(
         get() = _trackList
 
     fun setPlaylist(playlistModel: Playlist) {
-        _playlist.value = playlistModel
+        _playlist.postValue(playlistModel)
     }
 
     fun findPlaylist(id: Long) {
-        val a = viewModelScope.launch {
+        val a = viewModelScope.launch(ioDispatcher) {
             val res = getTrackListByPlaylistIdUseCase.execute(id)
             if (res.isSuccess) {
-                _trackList.value = res.getOrDefault(arrayListOf())
+                _trackList.postValue(res.getOrDefault(arrayListOf()))
             }
 
             Log.i(TAG, "findPlaylist: $res")

@@ -72,9 +72,8 @@ fun TrackCard(
 //                )
                 Image(
                     painter = rememberAsyncImagePainter(
-                        model = audio.artUrl, error = painterResource(
-                            id = com.nezuko.data.R.drawable.img
-                        )
+                        model = audio.artUrl,
+                        error = painterResource(id = com.nezuko.data.R.drawable.img)
                     ),
                     contentDescription = "123",
                     modifier = Modifier.align(Alignment.Center),

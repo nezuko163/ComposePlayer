@@ -1,4 +1,4 @@
-package com.nezuko.composeplayer.app.ui.screens.playlistScreen
+package com.nezuko.composeplayer.app.ui.screens.libraryScreen.playlistScreen
 
 import android.util.Log
 import androidx.compose.runtime.Composable

@@ -6,12 +6,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nezuko.domain.usecase.GetCurrentUserIDUseCase
+import com.nezuko.domain.usecase.InitializeAppUseCase
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.get
 import org.koin.compose.koinInject
 
 class UserViewModel(
-    private val getCurrentUserIDUseCase: GetCurrentUserIDUseCase
+    private val getCurrentUserIDUseCase: GetCurrentUserIDUseCase,
+    private val initializeAppUseCase: InitializeAppUseCase
 ) : ViewModel() {
     private val TAG = "USER_VIEW_MODEL"
 
@@ -34,4 +36,6 @@ class UserViewModel(
     fun setUID(id: String) {
         _uid.value = id
     }
+
+    fun initializeApp() = initializeAppUseCase.execute()
 }

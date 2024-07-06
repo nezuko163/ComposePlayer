@@ -1,11 +1,11 @@
-package com.nezuko.composeplayer.app.ui.screens.loginScreen
+package com.nezuko.composeplayer.app.ui.screens.startScreen.registerScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nezuko.domain.usecase.RegisterViaEmailAndPasswordUseCase
 import kotlinx.coroutines.launch
 
-class AuthViewModel(
+class RegisterViewModel(
     private val registerViaEmailAndPasswordUseCase: RegisterViaEmailAndPasswordUseCase
 ) : ViewModel() {
     fun registerViaPasswordAndEmail(email: String, password: String,

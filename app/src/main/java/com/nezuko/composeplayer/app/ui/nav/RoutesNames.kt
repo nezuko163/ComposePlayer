@@ -5,4 +5,7 @@ object RoutesNames {
     const val SEARCH_SCREEN = "SEARCH_SCREEN"
     const val MY_LIBRARY_SCREEN = "MY_LIBRARY_SCREEN"
     const val PLAYLIST_SCREEN = "PLAYLIST_SCREEN"
+    const val START_SCREEN = "START_SCREEN"
+    const val SIGN_IN_SCREEN = "SIGN_IN_SCREEN"
+    const val SIGN_UP_SCREEN = "SIGN_UP_SCREEN"
 }

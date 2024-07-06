@@ -1,10 +1,8 @@
-package com.nezuko.composeplayer.app.ui.screens.loginScreen
+package com.nezuko.composeplayer.app.ui.screens.startScreen.registerScreen
 
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,13 +11,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -29,14 +25,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nezuko.composeplayer.R
@@ -49,17 +41,16 @@ const val TAG = "LOGIN_SCREEN"
 
 @Preview
 @Composable
-fun LoginScreen(
+fun RegisterScreen(
+    onAuthComplete: (String) -> Unit = {},
     modifier: Modifier = Modifier,
-    authViewModel: AuthViewModel = koinViewModel(),
-    userViewModel: UserViewModel = koinViewModel()
+    registerViewModel: RegisterViewModel = koinViewModel(),
 ) {
     var loginText by remember { mutableStateOf("") }
-    var passwordText by remember { mutableStateOf("52") }
-    val context = LocalContext.current
-
+    var passwordText by remember { mutableStateOf("") }
 
     ComposePlayerTheme {
+
         Surface(
             modifier = modifier
                 .fillMaxSize()
@@ -72,7 +63,6 @@ fun LoginScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
                 OutlinedTextField(
                     value = if (loginText != "") loginText else "",
                     onValueChange = {
@@ -105,17 +95,17 @@ fun LoginScreen(
 
                 Button(
                     onClick = {
-                        authViewModel.registerViaPasswordAndEmail(loginText, passwordText) {
+                        registerViewModel.registerViaPasswordAndEmail(loginText, passwordText) {
                             it?.let {
                                 Log.i("LOGIN_SCREEN", "LoginScreen: $it")
-                                userViewModel.setUID(it)
+                                onAuthComplete.invoke(it)
                             }
                         }
                     },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Aqua),
+                    colors = ButtonDefaults.buttonColors(containerColor = Aqua),
                     shape = RoundedCornerShape(100.dp)
                 ) {
-                    Text(text = "login", color = Color.White)
+                    Text(text = "регистрация", color = Color.White)
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))

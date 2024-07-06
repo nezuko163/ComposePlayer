@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.tasks.Task
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -53,8 +54,24 @@ class AuthRepositoryImpl(
         email: String,
         password: String,
         onLoginComplete: (String) -> Unit
-    ): Result<Boolean> {
-        TODO("Not yet implemented")
+    ): Result<Boolean> = withContext(ioDispatcher) {
+
+        val auth = FirebaseAuth.getInstance()
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task: Task<AuthResult> ->
+                if (task.isSuccessful) {
+                    // послать запрос на добавление пользователей в users
+                    // будет обработано в source/remote
+
+                    onLoginComplete.invoke(task.result.user!!.uid)
+                } else {
+                    //
+                    Toast.makeText(context, "нипон", Toast.LENGTH_SHORT).show()
+                    onLoginComplete.invoke("")
+                }
+            }
+
+        Result.failure<Boolean>(Exception())
     }
 
     override suspend fun loginViaGoogle(
@@ -81,5 +98,9 @@ class AuthRepositoryImpl(
         } catch (_: Exception) {
             Result.failure(Exception("user not found"))
         }
+    }
+
+    override fun initializeApp() {
+        FirebaseApp.initializeApp(context)
     }
 }

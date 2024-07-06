@@ -24,4 +24,6 @@ interface AuthRepository {
     ): Result<Boolean>
 
     suspend fun getCurrentUserID(): Result<String>
+
+    fun initializeApp()
 }

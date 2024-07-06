@@ -5,6 +5,8 @@ import com.nezuko.data.repositoryImpl.PlaylistRepositoryImpl
 import com.nezuko.domain.usecase.GetAllLocalTracksUseCase
 import com.nezuko.domain.usecase.GetCurrentUserIDUseCase
 import com.nezuko.domain.usecase.GetTrackListByPlaylistIdUseCase
+import com.nezuko.domain.usecase.InitializeAppUseCase
+import com.nezuko.domain.usecase.LoginViaEmailAndPasswordUseCase
 import com.nezuko.domain.usecase.RegisterViaEmailAndPasswordUseCase
 import org.koin.dsl.module
 
@@ -33,5 +35,13 @@ val domainModule = module {
 
     factory<GetTrackListByPlaylistIdUseCase> {
         GetTrackListByPlaylistIdUseCase(impl = get<PlaylistRepositoryImpl>())
+    }
+
+    factory<LoginViaEmailAndPasswordUseCase> {
+        LoginViaEmailAndPasswordUseCase(impl = get<AuthRepositoryImpl>())
+    }
+
+    factory<InitializeAppUseCase> {
+        InitializeAppUseCase(impl = get<AuthRepositoryImpl>())
     }
 }

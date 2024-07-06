@@ -61,7 +61,7 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
+//    implementation(libs.androidx.material3)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
@@ -81,8 +81,9 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     // material bottom nav
-    implementation(libs.androidx.material)
     implementation(libs.material3)
+    runtimeOnly(libs.androidx.material3.vlatestversion)
+
 
     // coil compose
     implementation(libs.coil.compose)

@@ -11,7 +11,7 @@ import androidx.navigation.navArgument
 import com.nezuko.composeplayer.app.ui.screens.libraryScreen.LibraryScreen
 import com.nezuko.composeplayer.app.ui.screens.mainScreen.MainScreen
 import com.nezuko.composeplayer.app.ui.nav.RoutesNames
-import com.nezuko.composeplayer.app.ui.screens.playlistScreen.PlaylistScreen
+import com.nezuko.composeplayer.app.ui.screens.libraryScreen.playlistScreen.PlaylistScreen
 import com.nezuko.composeplayer.app.ui.screens.searchScreen.SearchScreen
 import com.nezuko.domain.model.Playlist
 

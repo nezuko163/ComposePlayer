@@ -1,38 +1,25 @@
 package com.nezuko.composeplayer.app.ui.views
 
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationDefaults
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.Text
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.intl.Locale
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.nezuko.composeplayer.R
-import com.nezuko.composeplayer.R.string.home
 import com.nezuko.composeplayer.app.utils.BottomTabs
-import com.nezuko.composeplayer.app.utils.extentsions.lifecycleIsResumed
-import com.nezuko.composeplayer.ui.theme.ComposePlayerTheme
-import org.koin.dsl.koinApplication
 
 @Composable
 fun MyBottomNavigation(navController: NavController) {
-    BottomNavigation(
+    NavigationBar(
 //        windowInsets = BottomNavigationDefaults.windowInsets,
-        backgroundColor = Color.Cyan,
+        containerColor = Color.White
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route ?: BottomTabs.HOME.route
@@ -43,7 +30,7 @@ fun MyBottomNavigation(navController: NavController) {
 //        if (currentRoute !in routes) return@BottomNavigation
 
         tabs.forEach { tab ->
-            BottomNavigationItem(
+            NavigationBarItem(
                 selected = currentRoute.split("/")[0] == tab.route,
                 onClick = {
                     if (tab.route != currentRoute) {
@@ -74,8 +61,6 @@ fun MyBottomNavigation(navController: NavController) {
                     Text(stringResource(id = tab.title).uppercase(java.util.Locale.getDefault()))
                 },
                 alwaysShowLabel = false,
-                unselectedContentColor = LocalContentColor.current,
-                selectedContentColor = Color.White,
                 modifier = Modifier.navigationBarsPadding()
             )
         }
