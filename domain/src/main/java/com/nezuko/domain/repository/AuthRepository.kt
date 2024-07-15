@@ -4,23 +4,31 @@ interface AuthRepository {
     suspend fun registerViaEmailAndPassword(
         email: String,
         password: String,
-        onRegisterComplete: (String) -> Unit
-    ): Result<Boolean>
+        onRegisterComplete: (String) -> Unit,
+        onSuccess: () -> Unit = {},
+        onFailure: () -> Unit = {},
+    )
 
     suspend fun registerViaGoogle(
         email: String,
-        onRegisterComplete: (String) -> Unit
+        onRegisterComplete: (String) -> Unit,
+        onSuccess: () -> Unit = {},
+        onFailure: () -> Unit = {},
     ): Result<Boolean>
 
     suspend fun loginViaEmailAndPassword(
         email: String,
         password: String,
-        onLoginComplete: (String) -> Unit
-    ): Result<Boolean>
+        onLoginComplete: (String) -> Unit,
+        onSuccess: () -> Unit = {},
+        onFailure: () -> Unit = {},
+    )
 
     suspend fun loginViaGoogle(
         email: String,
-        onLoginComplete: (String) -> Unit
+        onLoginComplete: (String) -> Unit,
+        onSuccess: () -> Unit = {},
+        onFailure: () -> Unit = {},
     ): Result<Boolean>
 
     suspend fun getCurrentUserID(): Result<String>

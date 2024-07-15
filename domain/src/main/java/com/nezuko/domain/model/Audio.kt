@@ -9,5 +9,11 @@ data class Audio(
     val meduaUrl: String,
     val duration: Long,
     val owner_id: String,
-    val dateAdded: Long = 0
-)
+    val dateAdded: Long = 0,
+    var queueId: Long = -1
+) {
+    fun setQueueID(id: Long): Audio {
+        queueId = id
+        return this
+    }
+}

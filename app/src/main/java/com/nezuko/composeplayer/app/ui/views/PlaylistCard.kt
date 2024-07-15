@@ -1,5 +1,6 @@
 package com.nezuko.composeplayer.app.ui.views
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,16 +33,19 @@ import com.nezuko.composeplayer.app.utils.bitmapFromResId
 import com.nezuko.composeplayer.app.utils.getBitmapFromUri
 import com.nezuko.domain.model.Playlist
 
+const val TAG1 = "TRACK_CARD"
 
 @Composable
 fun PlaylistCard(
-    Playlist: Playlist,
+    playlist: Playlist,
     onPlaylistClick: (Playlist) -> Unit,
     onDotsClick: (Playlist) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+
+    Log.i(TAG1, "PlaylistCard: ${playlist.title}")
     var bitmap = getBitmapFromUri(
-        Playlist.artUrl.toUri(),
+        playlist.artUrl.toUri(),
         LocalContext.current
     )
 
@@ -50,7 +54,7 @@ fun PlaylistCard(
     }
 
     Surface(
-        onClick = { onPlaylistClick.invoke(Playlist) } ,
+        onClick = { onPlaylistClick.invoke(playlist) },
         modifier = modifier
             .fillMaxWidth()
             .height(100.dp),
@@ -78,18 +82,21 @@ fun PlaylistCard(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = Playlist.title, modifier = Modifier
+                        text = playlist.title, modifier = Modifier
                             .weight(0.5f)
-                            .wrapContentHeight(Alignment.CenterVertically)
+                            .wrapContentHeight(Alignment.CenterVertically),
+                        color = Color.Black
                     )
-                    Text(text = Playlist.ownerName, modifier = Modifier.weight(0.5f))
+                    Text(text = playlist.ownerName, modifier = Modifier.weight(0.5f),
+                        color = Color.Black
+                    )
                 }
 
                 Image(
                     modifier = Modifier
                         .padding(vertical = 30.dp)
                         .background(Color.White)
-                        .clickable { onDotsClick.invoke(Playlist) },
+                        .clickable { onDotsClick.invoke(playlist) },
                     painter = painterResource(id = R.drawable.dots),
                     contentDescription = "больше",
                     contentScale = ContentScale.Fit,

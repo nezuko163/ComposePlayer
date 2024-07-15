@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.CodeBoy.MediaFacer.AudioGet
 import com.CodeBoy.MediaFacer.MediaFacer
+import com.CodeBoy.MediaFacer.mediaHolders.audioContent
 import com.nezuko.data.R
 import com.nezuko.data.utils.resToUri
 import com.nezuko.domain.model.Audio
@@ -42,8 +43,8 @@ class PlaylistRepositoryImpl(
 
         MediaFacer.withAudioContex(context)
             .getAllAudioContent(AudioGet.externalContentUri)
-            .forEach {
-                if (it.duration == 0L) return@forEach
+            .forEachIndexed { index: Int, it: audioContent ->
+                if (it.duration == 0L) return@forEachIndexed
                 val audio = Audio(
                     -1L,
                     it.title,
@@ -53,7 +54,8 @@ class PlaylistRepositoryImpl(
                     it.assetFileStringUri,
                     it.duration,
                     "",
-                    it.date_added
+                    it.date_added,
+                    index.toLong()
                 )
                 val TAG = "ALL_AUDIOS"
                 Log.i(TAG, "getAudios: ${it.name}")

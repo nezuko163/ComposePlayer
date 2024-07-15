@@ -1,10 +1,10 @@
 package com.nezuko.composeplayer.app.ui.screens.libraryScreen
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -40,15 +40,16 @@ fun PlaylistsList(
     if (playlists == null) {
         Text(text = "Плейлистов нетууу", modifier.fillMaxSize(), textAlign = TextAlign.Center)
     } else {
+        Log.i(TAG, "PlaylistsList: ${viewModel.allTracksPlaylist.title}")
         PlaylistCard(
-            Playlist = viewModel.allTracksPlaylist,
+            playlist = viewModel.allTracksPlaylist,
             onPlaylistClick = onPlaylistClick,
             onDotsClick = onDotsCLick
         )
 
         playlists.forEachIndexed { index: Int, playlist: Playlist ->
             PlaylistCard(
-                Playlist = playlist,
+                playlist = playlist,
                 onPlaylistClick = onPlaylistClick,
                 onDotsClick = onDotsCLick
             )

@@ -3,24 +3,32 @@ package com.nezuko.data.service
 import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
-import android.media.MediaPlayer.OnCompletionListener
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
+import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import android.widget.Toast
-import com.nezuko.domain.repository.ApiRepository
+import com.nezuko.data.utils.metadataToAudio
+import com.nezuko.data.utils.playbackStateCompatToPlaybackState
+import com.nezuko.data.utils.queueItemToAudio
+import com.nezuko.data.utils.queueToAudioList
+import com.nezuko.domain.callback.ConnectionCallbackInterface
+import com.nezuko.domain.callback.ControllerCallbackInterface
 
 
-class MediaBrowserManager(val context: Context) {
+class MediaBrowserManager(
+    val context: Context
+) {
 
     val TAG = "MEDDIA_MANAGER"
     lateinit var mediaBrowserCompat: MediaBrowserCompat
     lateinit var mediaControllerCompat: MediaControllerCompat
 
     lateinit var connectionRepository: ConnectionCallbackInterface
-    lateinit var callbackRepository: ControllerCallbackInterface
+    lateinit var controllerRepository: ControllerCallbackInterface
+
 
     private val connectionCallback = object : MediaBrowserCompat.ConnectionCallback() {
         override fun onConnected() {
@@ -63,13 +71,30 @@ class MediaBrowserManager(val context: Context) {
         override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
             super.onMetadataChanged(metadata)
 
-            callbackRepository.onMetadataChanged(metadata)
+            if (metadata == null) return
+            controllerRepository.onMetadataChanged(metadataToAudio(metadata))
         }
 
         override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
             super.onPlaybackStateChanged(state)
 
-            callbackRepository.onPlaybackStateChanged(state)
+            if (state == null) return
+            controllerRepository.onPlaybackStateChanged(playbackStateCompatToPlaybackState(state))
+        }
+
+        override fun onAudioInfoChanged(info: MediaControllerCompat.PlaybackInfo?) {
+            super.onAudioInfoChanged(info)
+
+            if (info != null) {
+                Log.i(TAG, "onAudioInfoChanged: ${info.volumeControl}")
+            }
+        }
+
+        override fun onQueueChanged(queue: MutableList<MediaSessionCompat.QueueItem>?) {
+            super.onQueueChanged(queue)
+
+            if (queue == null) return
+            controllerRepository.onQueueChanged(queueToAudioList(queue))
         }
 
     }

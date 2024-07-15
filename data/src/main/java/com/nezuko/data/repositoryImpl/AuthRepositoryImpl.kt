@@ -22,30 +22,35 @@ class AuthRepositoryImpl(
     override suspend fun registerViaEmailAndPassword(
         email: String,
         password: String,
-        onRegisterComplete: (String) -> Unit
-    ) = withContext(ioDispatcher) {
+        onRegisterComplete: (String) -> Unit,
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit,
+    ) {
+        withContext(ioDispatcher) {
+            val auth = FirebaseAuth.getInstance()
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task: Task<AuthResult> ->
+                    if (task.isSuccessful) {
+                        // послать запрос на добавление пользователей в users
+                        // будет обработано в source/remote
 
-        val auth = FirebaseAuth.getInstance()
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task: Task<AuthResult> ->
-                if (task.isSuccessful) {
-                    // послать запрос на добавление пользователей в users
-                    // будет обработано в source/remote
-
-                    onRegisterComplete.invoke(task.result.user!!.uid)
-                } else {
-                    //
-                    Toast.makeText(context, "нипон", Toast.LENGTH_SHORT).show()
-                    onRegisterComplete.invoke("")
+                        onRegisterComplete.invoke(task.result.user!!.uid)
+                        onSuccess.invoke()
+                    } else {
+                        //
+                        Toast.makeText(context, "нипон", Toast.LENGTH_SHORT).show()
+                        onRegisterComplete.invoke("")
+                        onFailure.invoke()
+                    }
                 }
-            }
-
-        Result.failure<Boolean>(Exception())
+        }
     }
 
     override suspend fun registerViaGoogle(
         email: String,
-        onRegisterComplete: (String) -> Unit
+        onRegisterComplete: (String) -> Unit,
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit
     ): Result<Boolean> {
         TODO("Not yet implemented")
     }
@@ -53,30 +58,36 @@ class AuthRepositoryImpl(
     override suspend fun loginViaEmailAndPassword(
         email: String,
         password: String,
-        onLoginComplete: (String) -> Unit
-    ): Result<Boolean> = withContext(ioDispatcher) {
+        onLoginComplete: (String) -> Unit,
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit
+    ) {
+        withContext(ioDispatcher) {
 
-        val auth = FirebaseAuth.getInstance()
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task: Task<AuthResult> ->
-                if (task.isSuccessful) {
-                    // послать запрос на добавление пользователей в users
-                    // будет обработано в source/remote
+            val auth = FirebaseAuth.getInstance()
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task: Task<AuthResult> ->
+                    if (task.isSuccessful) {
+                        // послать запрос на добавление пользователей в users
+                        // будет обработано в source/remote
 
-                    onLoginComplete.invoke(task.result.user!!.uid)
-                } else {
-                    //
-                    Toast.makeText(context, "нипон", Toast.LENGTH_SHORT).show()
-                    onLoginComplete.invoke("")
+                        onLoginComplete.invoke(task.result.user!!.uid)
+                        onSuccess.invoke()
+                    } else {
+                        //
+                        Toast.makeText(context, "нипон", Toast.LENGTH_SHORT).show()
+                        onLoginComplete.invoke("")
+                        onFailure.invoke()
+                    }
                 }
-            }
-
-        Result.failure<Boolean>(Exception())
+        }
     }
 
     override suspend fun loginViaGoogle(
         email: String,
-        onLoginComplete: (String) -> Unit
+        onLoginComplete: (String) -> Unit,
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit,
     ): Result<Boolean> {
         TODO("Not yet implemented")
     }

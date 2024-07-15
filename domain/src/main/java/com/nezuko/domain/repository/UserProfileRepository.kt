@@ -5,8 +5,8 @@ import com.nezuko.domain.model.UserProfile
 
 interface UserProfileRepository {
     suspend fun registerUserProfile(
-        user: UserProfile
-    ): Result<Boolean>
-
-
+        user: UserProfile,
+        onSuccess: () -> Unit = {},
+        onFailure: () -> Unit = {}
+    )
 }

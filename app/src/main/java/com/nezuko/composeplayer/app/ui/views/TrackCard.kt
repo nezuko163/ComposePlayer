@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material.icons.materialIcon
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Surface
@@ -49,6 +50,7 @@ fun TrackCard(
     onTrackClick: (Audio) -> Unit = {},
     onDotsClick: (Audio) -> Unit = {},
 ) {
+    Log.i(TAG, "TrackCard: ${audio.queueId}")
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -73,9 +75,12 @@ fun TrackCard(
                 Image(
                     painter = rememberAsyncImagePainter(
                         model = audio.artUrl,
-                        error = painterResource(id = com.nezuko.data.R.drawable.img)
+                        error = painterResource(id = com.nezuko.data.R.drawable.img).also {
+                            Log.i(TAG, "TrackCard: $audio")
+                        }
                     ),
                     contentDescription = "123",
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier.align(Alignment.Center),
                 )
             }
@@ -89,13 +94,14 @@ fun TrackCard(
                 Text(
                     text = audio.title, modifier = Modifier
                         .weight(0.5f)
-                        .wrapContentHeight(Alignment.CenterVertically)
+                        .wrapContentHeight(Alignment.CenterVertically),
+                    color = Color.Black
                 )
                 Text(
                     text = audio.artist,
                     modifier = Modifier
-                        .weight(0.5f)
-//                            .wrapContentHeight(Alignment.CenterVertically)
+                        .weight(0.5f),
+                    color = Color.Black
                 )
             }
 
@@ -112,5 +118,4 @@ fun TrackCard(
     }
 
 //    Text(text = audio.title)
-    Log.i(TAG, "TrackCard: ${audio.title}")
 }

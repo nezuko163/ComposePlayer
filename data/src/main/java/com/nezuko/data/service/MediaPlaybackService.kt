@@ -10,6 +10,7 @@ import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -94,14 +95,19 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
     }
 
     private val callback = object : MediaSessionCompat.Callback() {
-
         override fun onMediaButtonEvent(mediaButtonEvent: Intent?): Boolean {
             val keyEvent: KeyEvent? =
                 // SDK 33 and up
-                mediaButtonEvent?.getParcelableExtra(
-                    Intent.EXTRA_KEY_EVENT,
-                    KeyEvent::class.java
-                )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    mediaButtonEvent?.getParcelableExtra(
+                        Intent.EXTRA_KEY_EVENT,
+                        KeyEvent::class.java
+                    )
+                } else {
+                    mediaButtonEvent?.getParcelableExtra(
+                        Intent.EXTRA_KEY_EVENT
+                    )
+                }
             keyEvent?.let { event ->
                 when (event.keyCode) {
                     KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE -> {
@@ -119,6 +125,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
 
             return super.onMediaButtonEvent(mediaButtonEvent)
         }
+
 
         override fun onSetRepeatMode(repeatMode: Int) {
             super.onSetRepeatMode(repeatMode)
@@ -164,7 +171,8 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
             am.abandonAudioFocusRequest(audioFocusRequest)
             try {
                 unregisterReceiver(noisyReceiver)
-            } catch (_: Exception) {}
+            } catch (_: Exception) {
+            }
             stopSelf()
             mediaSession.isActive = false
             player.stop()
@@ -262,6 +270,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
             super.onAddQueueItem(description)
             onAddQueueItem(description, list.size)
         }
+
     }
 
 
