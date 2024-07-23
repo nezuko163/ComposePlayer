@@ -27,18 +27,19 @@ fun PlaylistScreen(
         tracks,
         { audio: Audio ->
             if (audio.meduaUrl.isNotEmpty()) {
-                Log.i(TAG, "PlaylistScreen: queue = ${playerServiceViewModel.queue.value}")
-                Log.i(TAG, "PlaylistScreen: trackList = ${playlistViewModel.trackList.value}")
-                if (playerServiceViewModel.queue.value == playlistViewModel.trackList.value) {
-                    if (playerServiceViewModel.audio.value?.queueId != audio.queueId) {
-                        playerServiceViewModel.pause()
+                if (playerServiceViewModel.queue.value == tracks) {
+                    Log.i(TAG, "PlaylistScreen: audio = ${playerServiceViewModel.audio}")
+//                    Log.i(TAG, "PlaylistScreen: playerServiceViewModel.audio = ${playerServiceViewModel.audio.value}")
+                    if (playerServiceViewModel.audio?.queueId == audio.queueId) {
+                        playerServiceViewModel.playOrPause()
+                        Log.i(TAG, "PlaylistScreen: pause")
                     } else {
                         playerServiceViewModel.skipToQueueItem(audio.queueId)
                         playerServiceViewModel.play()
+                        Log.i(TAG, "PlaylistScreen: play")
                     }
                 } else {
-                    playerServiceViewModel.stop()
-                    playerServiceViewModel.setQueue(playlistViewModel.trackList.value!!)
+                    playerServiceViewModel.setQueue(tracks!!)
                     playerServiceViewModel.skipToQueueItem(audio.queueId)
                     playerServiceViewModel.play()
                 }

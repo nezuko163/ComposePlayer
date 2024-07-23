@@ -21,7 +21,15 @@ val dataModule = module {
             ioDispatcher = get(named("IODispatcher"))
         )
     }
-    single<PlayerRepositoryImpl> { (activity: Activity) ->
-        PlayerRepositoryImpl(context = get(), activity)
+
+    single<MediaBrowserManager> {
+        MediaBrowserManager(context = get())
+    }
+
+    single<PlayerRepositoryImpl> {
+        PlayerRepositoryImpl(
+            context = get(),
+            mediaBrowser = get()
+        )
     }
 }

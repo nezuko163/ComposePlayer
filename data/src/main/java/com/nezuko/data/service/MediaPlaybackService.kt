@@ -159,7 +159,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
                 )
 //                val thread = Thread(playerPosition)
 //                Thread(Player) start ()
-                refreshNotification()
+//                refreshNotification()
 
             }
         }
@@ -168,8 +168,8 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
             super.onStop()
             Log.i(TAG, "onStop: called onstop")
             val am = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-            am.abandonAudioFocusRequest(audioFocusRequest)
             try {
+                am.abandonAudioFocusRequest(audioFocusRequest)
                 unregisterReceiver(noisyReceiver)
             } catch (_: Exception) {
             }
@@ -181,6 +181,18 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
 
         override fun onCustomAction(action: String?, extras: Bundle?) {
             super.onCustomAction(action, extras)
+
+            action?.let {
+                when (it) {
+                    "clear" -> clearQueue()
+                    "playOrPause" -> playOrPause()
+                }
+            }
+        }
+
+        private fun playOrPause() {
+            if (player.isPlaying()) onPause()
+            else onPlay()
         }
 
         override fun onCommand(command: String?, extras: Bundle?, cb: ResultReceiver?) {
@@ -275,14 +287,18 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
 
 
     private fun setMediaPlaybackState(state: Int, bundle: Bundle? = null) {
-        val playbackPosition = player.currentTime().toLong() ?: 0L
-        val playbackSpeed = player.mediaPlayer.playbackParams.speed ?: 0f
-        val playbackStateBuilder = PlaybackStateCompat.Builder()
-            .setState(state, playbackPosition, playbackSpeed)
-            .setActiveQueueItemId(currentQueueItemId.toLong())
-        playbackStateBuilder.setExtras(bundle)
-        playbackStateBuilder.setState(state, playbackPosition, playbackSpeed)
-        mediaSession.setPlaybackState(playbackStateBuilder.build())
+        try {
+            val playbackPosition = player.currentTime().toLong() ?: 0L
+            val playbackSpeed = player.mediaPlayer.playbackParams.speed ?: 0f
+            val playbackStateBuilder = PlaybackStateCompat.Builder()
+                .setState(state, playbackPosition, playbackSpeed)
+                .setActiveQueueItemId(currentQueueItemId.toLong())
+            playbackStateBuilder.setExtras(bundle)
+            playbackStateBuilder.setState(state, playbackPosition, playbackSpeed)
+            mediaSession.setPlaybackState(playbackStateBuilder.build())
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun setMediaMetadata() {
@@ -423,9 +439,10 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
     private fun init() {
         initMediaSession()
         initPlayer()
+        NotificationHelper.createChannelForMediaPlayerNotification(applicationContext)
 //        playerPositionRunnable.run()
 //        initReceiver()
-        Thread(playerPositionRunnable).start()
+//        Thread(playerPositionRunnable).start()
     }
 
     private fun initMediaSession() {
@@ -484,12 +501,18 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
                 "pause" -> callback.onPause()
                 "next" -> callback.onSkipToNext()
                 "previous" -> callback.onSkipToPrevious()
+                "clear" -> clearQueue()
             }
         }
         Log.i(TAG, "onStartCommand: 123")
         MediaButtonReceiver.handleIntent(mediaSession, intent)
         return super.onStartCommand(intent, flags, startId)
 
+    }
+
+    private fun clearQueue() {
+        list.clear()
+        mediaSession.setQueue(list)
     }
 
     override fun onDestroy() {

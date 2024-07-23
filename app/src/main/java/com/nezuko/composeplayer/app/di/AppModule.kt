@@ -7,6 +7,8 @@ import com.nezuko.composeplayer.app.ui.screens.libraryScreen.playlistScreen.Play
 import com.nezuko.composeplayer.app.ui.screens.startScreen.loginScreen.LoginViewModel
 import com.nezuko.composeplayer.app.ui.viewmodels.PlayerServiceViewModel
 import com.nezuko.composeplayer.app.ui.viewmodels.UserViewModel
+import com.nezuko.domain.usecase.AddQueueItemUseCase
+import com.nezuko.domain.usecase.ClearQueueUseCase
 import com.nezuko.domain.usecase.GetAllLocalTracksUseCase
 import com.nezuko.domain.usecase.GetCurrentUserIDUseCase
 import com.nezuko.domain.usecase.GetTrackListByPlaylistIdUseCase
@@ -16,6 +18,7 @@ import com.nezuko.domain.usecase.NextTrackUseCase
 import com.nezuko.domain.usecase.OnServiceStartUseCase
 import com.nezuko.domain.usecase.OnServiceStopUseCase
 import com.nezuko.domain.usecase.PauseUseCase
+import com.nezuko.domain.usecase.PlayOrPauseUseCase
 import com.nezuko.domain.usecase.PlayUseCase
 import com.nezuko.domain.usecase.PreviousTrackUseCase
 import com.nezuko.domain.usecase.RegisterViaEmailAndPasswordUseCase
@@ -61,7 +64,10 @@ val appModule = module {
             onServiceStartUseCase = get<OnServiceStartUseCase>(),
             onServiceStopUseCase = get<OnServiceStopUseCase>(),
             setPlayerCallbacksUseCase = get<SetPlayerCallbacksUseCase>(),
-            skipToQueueItemUseCase = get<SkipToQueueItemUseCase>()
+            skipToQueueItemUseCase = get<SkipToQueueItemUseCase>(),
+            addQueueItemUseCase = get<AddQueueItemUseCase>(),
+            clearQueueUseCase = get<ClearQueueUseCase>(),
+            playOrPauseUseCase = get<PlayOrPauseUseCase>()
         )
     }
 }

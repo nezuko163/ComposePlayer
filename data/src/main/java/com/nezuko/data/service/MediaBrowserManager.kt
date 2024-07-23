@@ -35,7 +35,6 @@ class MediaBrowserManager(
             super.onConnected()
 
             mediaControllerCompat = MediaControllerCompat(context, mediaBrowserCompat.sessionToken)
-            MediaControllerCompat.setMediaController(context as Activity, mediaControllerCompat)
             Log.i(
                 "MAIN_ACTIVITY",
                 "onConnected: mediaController = ${::mediaControllerCompat.isInitialized}"
@@ -72,6 +71,8 @@ class MediaBrowserManager(
             super.onMetadataChanged(metadata)
 
             if (metadata == null) return
+            Log.i(TAG, "onMetadataChanged: ${metadataToAudio(metadata)}")
+            Log.i(TAG, "onMetadataChanged: is initilized: ${::controllerRepository.isInitialized}")
             controllerRepository.onMetadataChanged(metadataToAudio(metadata))
         }
 
@@ -79,6 +80,7 @@ class MediaBrowserManager(
             super.onPlaybackStateChanged(state)
 
             if (state == null) return
+            Log.i(TAG, "onPlaybackStateChanged: ${playbackStateCompatToPlaybackState(state)}")
             controllerRepository.onPlaybackStateChanged(playbackStateCompatToPlaybackState(state))
         }
 

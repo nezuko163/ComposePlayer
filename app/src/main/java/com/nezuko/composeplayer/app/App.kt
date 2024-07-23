@@ -16,7 +16,6 @@ import org.koin.dsl.module
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
-
         startKoin {
             module {
                 single { this@App } binds arrayOf(Context::class, Application::class)

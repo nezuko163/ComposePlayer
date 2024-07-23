@@ -13,11 +13,10 @@ import com.nezuko.domain.repository.PlayerRepository
 
 class PlayerRepositoryImpl(
     private val context: Context,
-    private val activity: Activity
+    private val mediaBrowser: MediaBrowserManager
 ) : PlayerRepository {
 
     private val TAG = "PLAYER_REPOSITORY"
-    private val mediaBrowser = MediaBrowserManager(activity)
 
     override fun setCallbacks(
         controllerCallbackInterface: ControllerCallbackInterface,
@@ -29,6 +28,14 @@ class PlayerRepositoryImpl(
 
     override fun skipToQueueItem(id: Long) {
         mediaBrowser.mediaController()?.skipToQueueItem(id)
+    }
+
+    override fun clearQueue() {
+        mediaBrowser.mediaController()?.sendCustomAction("clear", null)
+    }
+
+    override fun playOrPause() {
+        mediaBrowser.mediaController()?.sendCustomAction("playOrPause", null)
     }
 
     override fun play() {
@@ -60,6 +67,7 @@ class PlayerRepositoryImpl(
     }
 
     override fun addQueueItem(audio: Audio, id: Long?) {
+        Log.i(TAG, "addQueueItem: ${audio.title}")
         mediaBrowser.mediaControllerCompat.addQueueItem(audioToMediaDescriptionCompat(audio, id))
     }
 

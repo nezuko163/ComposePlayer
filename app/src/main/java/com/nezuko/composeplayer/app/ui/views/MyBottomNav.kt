@@ -60,7 +60,7 @@ fun MyBottomNavigation(navController: NavController) {
                 label = {
                     Text(stringResource(id = tab.title).uppercase(java.util.Locale.getDefault()))
                 },
-                alwaysShowLabel = false,
+                alwaysShowLabel = true,
                 modifier = Modifier.navigationBarsPadding()
             )
         }

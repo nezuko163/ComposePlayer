@@ -42,6 +42,8 @@ class MainActivity : ComponentActivity() {
                 App(navController)
             }
         }
+
+
     }
 
     override fun onStart() {
@@ -52,6 +54,12 @@ class MainActivity : ComponentActivity() {
 
     override fun onStop() {
         super.onStop()
+
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
 
         if (::playerServiceViewModel.isInitialized) playerServiceViewModel.onStop()
     }

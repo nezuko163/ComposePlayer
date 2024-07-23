@@ -1,6 +1,7 @@
 package com.nezuko.data.utils
 
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore.Audio.Media
 import android.support.v4.media.MediaDescriptionCompat
@@ -9,12 +10,14 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import com.nezuko.domain.model.Audio
 
+val TAG = "METADATA_CONVERT"
+
 fun metadataBuilder(queueItem: MediaSessionCompat.QueueItem): MediaMetadataCompat.Builder? {
 
     val duration = queueItem.description.extras?.getLong("duration") ?: return null
     val id = queueItem.description.extras?.getLong("queue_id") ?: return null
 
-    Log.i("MAIN_ACTIVITY", "metadataBuilder: $duration")
+    Log.i("MAIN_ACTIVITY", "metadataBuilder: ${queueItem.description.iconUri}")
 
     val builder = MediaMetadataCompat.Builder()
         .putString(
@@ -34,6 +37,10 @@ fun metadataBuilder(queueItem: MediaSessionCompat.QueueItem): MediaMetadataCompa
             queueItem.description.subtitle.toString()
         )
         .putString(
+            MediaMetadataCompat.METADATA_KEY_ALBUM,
+            "какого хуя альбома нет"
+        )
+        .putString(
             MediaMetadataCompat.METADATA_KEY_DISPLAY_DESCRIPTION,
             queueItem.description.description.toString()
         )
@@ -42,16 +49,20 @@ fun metadataBuilder(queueItem: MediaSessionCompat.QueueItem): MediaMetadataCompa
     return builder
 }
 
-fun metadataToAudio(metadata: MediaMetadataCompat) = Audio(
-    -1L,
-    metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE),
-    metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST),
-    metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM),
-    metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI),
-    metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI),
-    metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION),
-    "",
-)
+fun metadataToAudio(metadata: MediaMetadataCompat): Audio {
+    Log.i(TAG, "metadataToAudio: $metadata")
+    return Audio(
+        -1L,
+        metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE),
+        metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST),
+        metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM),
+        metadata.getString(MediaMetadataCompat.METADATA_KEY_ART_URI),
+        metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI),
+        metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION),
+        "",
+        queueId = metadata.getLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS)
+    )
+}
 
 fun audioToMediaDescriptionCompat(
     audio: Audio,
@@ -76,7 +87,8 @@ fun audioToMediaDescriptionCompat(
 }
 
 fun queueItemToAudio(item: MediaSessionCompat.QueueItem): Audio {
-    val duration = item.description.extras?.getLong(MediaMetadataCompat.METADATA_KEY_DURATION, -1) ?: 0
+    val duration =
+        item.description.extras?.getLong(MediaMetadataCompat.METADATA_KEY_DURATION, -1) ?: 0
     return Audio(
         -1L,
         item.description.title.toString(),

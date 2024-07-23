@@ -22,4 +22,6 @@ interface PlayerRepository {
         connectionCallbackInterface: ConnectionCallbackInterface
     )
     fun skipToQueueItem(id: Long)
+    fun clearQueue()
+    fun playOrPause()
 }

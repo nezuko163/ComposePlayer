@@ -5,6 +5,7 @@ import com.nezuko.data.repositoryImpl.PlayerRepositoryImpl
 import com.nezuko.data.repositoryImpl.PlaylistRepositoryImpl
 import com.nezuko.domain.repository.PlayerRepository
 import com.nezuko.domain.usecase.AddQueueItemUseCase
+import com.nezuko.domain.usecase.ClearQueueUseCase
 import com.nezuko.domain.usecase.GetAllLocalTracksUseCase
 import com.nezuko.domain.usecase.GetCurrentUserIDUseCase
 import com.nezuko.domain.usecase.GetTrackListByPlaylistIdUseCase
@@ -14,6 +15,7 @@ import com.nezuko.domain.usecase.NextTrackUseCase
 import com.nezuko.domain.usecase.OnServiceStartUseCase
 import com.nezuko.domain.usecase.OnServiceStopUseCase
 import com.nezuko.domain.usecase.PauseUseCase
+import com.nezuko.domain.usecase.PlayOrPauseUseCase
 import com.nezuko.domain.usecase.PlayUseCase
 import com.nezuko.domain.usecase.PreviousTrackUseCase
 import com.nezuko.domain.usecase.RegisterViaEmailAndPasswordUseCase
@@ -101,6 +103,14 @@ val domainModule = module {
 
     factory<SkipToQueueItemUseCase> {
         SkipToQueueItemUseCase(impl = get<PlayerRepositoryImpl>())
+    }
+
+    factory<ClearQueueUseCase> {
+        ClearQueueUseCase(impl = get<PlayerRepositoryImpl>())
+    }
+
+    factory<PlayOrPauseUseCase> {
+        PlayOrPauseUseCase(impl = get<PlayerRepositoryImpl>())
     }
 
 

@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
@@ -44,9 +45,10 @@ import com.nezuko.domain.model.Audio
 
 val TAG = "TRACK_CARD"
 
+@Preview
 @Composable
 fun TrackCard(
-    audio: Audio,
+    audio: Audio = Audio(-1L, "aye", "aye", "", "", "", 432132231L, ""),
     onTrackClick: (Audio) -> Unit = {},
     onDotsClick: (Audio) -> Unit = {},
 ) {
@@ -66,23 +68,23 @@ fun TrackCard(
                     .width(55.dp)
 
             ) {
-//                AsyncImage(
-//                    model = audio.artUrl,
-//                    contentDescription = "123",
-//                    modifier = modifier.align(Alignment.Center),
-//                    error = painterResource(id = com.nezuko.data.R.drawable.img)
-//                )
-                Image(
-                    painter = rememberAsyncImagePainter(
-                        model = audio.artUrl,
-                        error = painterResource(id = com.nezuko.data.R.drawable.img).also {
-                            Log.i(TAG, "TrackCard: $audio")
-                        }
-                    ),
+                AsyncImage(
+                    model = audio.artUrl,
                     contentDescription = "123",
-                    contentScale = ContentScale.Crop,
                     modifier = Modifier.align(Alignment.Center),
+                    error = painterResource(id = com.nezuko.data.R.drawable.img)
                 )
+//                Image(
+//                    painter = rememberAsyncImagePainter(
+//                        model = audio.artUrl,
+//                        error = painterResource(id = com.nezuko.data.R.drawable.img).also {
+//                            Log.i(TAG, "TrackCard: $audio")
+//                        }
+//                    ),
+//                    contentDescription = "123",
+//                    contentScale = ContentScale.Crop,
+//                    modifier = Modifier.align(Alignment.Center),
+//                )
             }
             Column(
                 modifier = Modifier
@@ -107,7 +109,8 @@ fun TrackCard(
 
             Image(
                 modifier = Modifier
-                    .padding(vertical = 25.dp)
+                    .padding(vertical = 22.dp, horizontal = 10.dp)
+
                     .background(Color.White)
                     .clickable { onDotsClick.invoke(audio) },
                 painter = painterResource(id = R.drawable.dots),
