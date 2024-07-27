@@ -70,8 +70,7 @@ androidx-media = { module = "androidx.media:media", version.ref = "media" }
 # koin
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinBom" }
 koin-androidx-compose-navigation = { module = "io.insert-koin:koin-androidx-compose-navigation", version.ref = "koinBom" }
-koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koinBom" }
-koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinBom" }
+koin-android-viewmodel = { module = "io.insert-koin:koin-androidx-viewmodel", version.ref = "koinBom"}
 
 # liveData Compose
 androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "runtimeLivedata" }

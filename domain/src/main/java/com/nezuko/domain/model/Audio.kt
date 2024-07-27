@@ -1,14 +1,14 @@
 package com.nezuko.domain.model
 
 data class Audio(
-    val id: Long,
-    val title: String,
-    val artist: String,
-    val album: String,
-    val artUrl: String,
-    val meduaUrl: String,
-    val duration: Long,
-    val owner_id: String,
+    val id: Long = -1L,
+    val title: String = "без названия",
+    val artist: String = "неизвестен",
+    val album: String = "zhopa",
+    val artUrl: String = "",
+    val meduaUrl: String = "",
+    val duration: Long = -1L,
+    val owner_id: String = "",
     val dateAdded: Long = 0,
     var queueId: Long = -1
 ) {

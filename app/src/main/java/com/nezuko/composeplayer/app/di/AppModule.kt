@@ -6,6 +6,7 @@ import com.nezuko.composeplayer.app.ui.screens.mainScreen.NumbersViewModel
 import com.nezuko.composeplayer.app.ui.screens.libraryScreen.playlistScreen.PlaylistViewModel
 import com.nezuko.composeplayer.app.ui.screens.startScreen.loginScreen.LoginViewModel
 import com.nezuko.composeplayer.app.ui.viewmodels.PlayerServiceViewModel
+import com.nezuko.composeplayer.app.ui.viewmodels.ShouldShowBottomBarViewModel
 import com.nezuko.composeplayer.app.ui.viewmodels.UserViewModel
 import com.nezuko.domain.usecase.AddQueueItemUseCase
 import com.nezuko.domain.usecase.ClearQueueUseCase
@@ -31,7 +32,7 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val appModule = module {
-    viewModel<NumbersViewModel> { NumbersViewModel() }
+    viewModel<NumbersViewModel>{ NumbersViewModel() }
     viewModel<PlaylistsViewModel> { PlaylistsViewModel(get<GetAllLocalTracksUseCase>()) }
     viewModel<UserViewModel> {
         UserViewModel(
@@ -70,4 +71,6 @@ val appModule = module {
             playOrPauseUseCase = get<PlayOrPauseUseCase>()
         )
     }
+
+    viewModel<ShouldShowBottomBarViewModel> { ShouldShowBottomBarViewModel() }
 }

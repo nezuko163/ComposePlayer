@@ -69,7 +69,6 @@ dependencies {
 
     // koin
 //    implementation(libs.koin.bom)
-    implementation(libs.koin.core)
     implementation(libs.koin.androidx.compose.navigation)
     runtimeOnly(libs.koin.androidx.compose)
 

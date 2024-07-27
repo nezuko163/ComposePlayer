@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import com.nezuko.composeplayer.app.ui.nav.AppNavigation
-import com.nezuko.composeplayer.app.ui.views.BottomBar
+import com.nezuko.composeplayer.app.ui.screens.сontrolPlayingTrackScreen.navigateToControlPlaingTrack
 import com.nezuko.composeplayer.app.ui.views.MyBottomNavigation
 import com.nezuko.composeplayer.app.ui.views.PlayingTrackBottomBar
 
@@ -37,7 +37,7 @@ fun ShowMainFeature(navController: NavHostController) {
     Scaffold(
         bottomBar = {
             Column {
-                PlayingTrackBottomBar()
+                PlayingTrackBottomBar(onClick = { navController.navigateToControlPlaingTrack() })
                 MyBottomNavigation(navController)
             }
         },

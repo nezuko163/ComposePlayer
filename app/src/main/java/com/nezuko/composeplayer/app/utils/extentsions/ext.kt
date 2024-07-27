@@ -1,5 +1,6 @@
 package com.nezuko.composeplayer.app.utils.extentsions
 
+import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavBackStackEntry

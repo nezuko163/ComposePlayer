@@ -6,7 +6,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import com.nezuko.composeplayer.app.ui.viewmodels.PlayerServiceViewModel
+import com.nezuko.composeplayer.app.ui.viewmodels.PlayerServiceViewModelStoreOwner
 import com.nezuko.composeplayer.app.ui.views.TracksList
+import com.nezuko.composeplayer.app.utils.getGlobalViewModel
 import com.nezuko.domain.model.Audio
 import org.koin.androidx.compose.koinViewModel
 
@@ -17,12 +19,15 @@ fun PlaylistScreen(
     id: Long,
     modifier: Modifier = Modifier,
     playlistViewModel: PlaylistViewModel = koinViewModel(),
-    playerServiceViewModel: PlayerServiceViewModel = koinViewModel()
+    playerServiceViewModel: PlayerServiceViewModel =
+        getGlobalViewModel(
+            viewModelClass = PlayerServiceViewModel::class.java,
+            PlayerServiceViewModelStoreOwner
+        )
 ) {
     playlistViewModel.findPlaylist(id)
     val tracks by playlistViewModel.trackList.observeAsState()
 
-    Log.i(TAG, "PlaylistScreen: 123")
     TracksList(
         tracks,
         { audio: Audio ->
@@ -30,7 +35,7 @@ fun PlaylistScreen(
                 if (playerServiceViewModel.queue.value == tracks) {
                     Log.i(TAG, "PlaylistScreen: audio = ${playerServiceViewModel.audio}")
 //                    Log.i(TAG, "PlaylistScreen: playerServiceViewModel.audio = ${playerServiceViewModel.audio.value}")
-                    if (playerServiceViewModel.audio?.queueId == audio.queueId) {
+                    if (playerServiceViewModel.audio.value?.queueId == audio.queueId) {
                         playerServiceViewModel.playOrPause()
                         Log.i(TAG, "PlaylistScreen: pause")
                     } else {

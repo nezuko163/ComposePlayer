@@ -8,4 +8,5 @@ object RoutesNames {
     const val START_SCREEN = "START_SCREEN"
     const val SIGN_IN_SCREEN = "SIGN_IN_SCREEN"
     const val SIGN_UP_SCREEN = "SIGN_UP_SCREEN"
+    const val CONTROL_PLAYING_TRACK_SCREEN = "CONTROL_PLAYING_TRACK_SCREEN"
 }

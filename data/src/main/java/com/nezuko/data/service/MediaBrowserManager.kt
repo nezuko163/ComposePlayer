@@ -16,6 +16,8 @@ import com.nezuko.data.utils.queueItemToAudio
 import com.nezuko.data.utils.queueToAudioList
 import com.nezuko.domain.callback.ConnectionCallbackInterface
 import com.nezuko.domain.callback.ControllerCallbackInterface
+import com.nezuko.domain.model.Audio
+import com.nezuko.domain.model.PlaybackState
 
 
 class MediaBrowserManager(
@@ -74,6 +76,7 @@ class MediaBrowserManager(
             Log.i(TAG, "onMetadataChanged: ${metadataToAudio(metadata)}")
             Log.i(TAG, "onMetadataChanged: is initilized: ${::controllerRepository.isInitialized}")
             controllerRepository.onMetadataChanged(metadataToAudio(metadata))
+
         }
 
         override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {

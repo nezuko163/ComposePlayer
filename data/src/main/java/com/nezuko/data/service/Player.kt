@@ -104,6 +104,9 @@ class Player(val context: Context) {
         mediaPlayer.seekTo(ms)
     }
 
+    val duration: Long
+        get() = mediaPlayer.duration.toLong()
+
     companion object {
         const val TAG = "PLAYER_AUDIO"
     }

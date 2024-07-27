@@ -66,7 +66,10 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
         when (repeatMode) {
             PlaybackStateCompat.REPEAT_MODE_ONE -> callback.onPlay()
             PlaybackStateCompat.REPEAT_MODE_ALL -> callback.onSkipToNext()
-            else -> callback.onStop()
+            else -> {
+                if (currentQueueItemId == list.size) return@OnCompletionListener
+                callback.onStop()
+            }
         }
     }
 
@@ -205,7 +208,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
             Log.i(TAG, "onPause: called onpause")
 
             player.pause()
-//            mediaSession.isActive = true
+            mediaSession.isActive = true
 //            unregisterReceiver(noisyReceiver)
             refreshNotification()
             setMediaPlaybackState(PlaybackStateCompat.STATE_PAUSED)
@@ -286,8 +289,10 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
     }
 
 
-    private fun setMediaPlaybackState(state: Int, bundle: Bundle? = null) {
+    private fun setMediaPlaybackState(state: Int, bundle: Bundle = Bundle()) {
         try {
+            val duration = player.duration
+            bundle.putLong("duration", duration)
             val playbackPosition = player.currentTime().toLong() ?: 0L
             val playbackSpeed = player.mediaPlayer.playbackParams.speed ?: 0f
             val playbackStateBuilder = PlaybackStateCompat.Builder()
@@ -319,7 +324,6 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
             mediaSession,
             player.isPlaying()
         )
-        val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
 
         startForeground(14881, builder.build())
@@ -440,9 +444,8 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
         initMediaSession()
         initPlayer()
         NotificationHelper.createChannelForMediaPlayerNotification(applicationContext)
-//        playerPositionRunnable.run()
-//        initReceiver()
-//        Thread(playerPositionRunnable).start()
+        playerPositionRunnable.run()
+        Thread(playerPositionRunnable).start()
     }
 
     private fun initMediaSession() {

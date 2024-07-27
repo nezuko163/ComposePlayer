@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.nezuko.composeplayer.app.ui.screens.libraryScreen.playlistScreen.PlaylistViewModel
@@ -24,12 +25,15 @@ fun TracksList(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+
+
 //    if (trackList == null) return
     trackList?.run {
+        val items = rememberOptimizedTrackList(trackList = trackList)
         Log.i(TAG2, "TracksList: recomp")
         LazyColumn {
             items(
-                items = trackList,
+                items = items,
                 key = { audio: Audio -> audio.queueId }
             ) {
                 TrackCard(
@@ -54,4 +58,9 @@ fun TracksList(
 //            }
 //        }
     }
+}
+
+@Composable
+fun rememberOptimizedTrackList(trackList: List<Audio>): List<Audio> {
+    return remember { trackList }
 }

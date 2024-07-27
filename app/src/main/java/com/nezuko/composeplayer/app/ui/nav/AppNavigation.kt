@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.nezuko.composeplayer.app.ui.screens.сontrolPlayingTrackScreen.controlPlaingTrack
 import com.nezuko.composeplayer.app.utils.extentsions.library
 import com.nezuko.composeplayer.app.utils.extentsions.main
 import com.nezuko.composeplayer.app.utils.extentsions.navigateToPlaylistScreen
@@ -45,5 +46,7 @@ fun AppNavigation(navHostController: NavHostController, modifier: Modifier) {
             }
         )
         playlist()
+
+        controlPlaingTrack()
     }
 }

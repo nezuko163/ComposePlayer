@@ -44,18 +44,28 @@ class NotificationHelper {
 
                 // Enable launching the player by clicking the notification
 
-                val intent = context.packageManager
-                    .getLaunchIntentForPackage(context.packageName)
-                    ?.setPackage(null)
-                    ?.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
-                val contentIntent = PendingIntent.getActivity(
+//                val intent = context.packageManager
+//                    .getLaunchIntentForPackage(context.packageName)
+//                    ?.setPackage(null)
+//                    ?.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+//                val contentIntent = PendingIntent.getActivity(
+//                    context,
+//                    0,
+//                    intent,
+//                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+//                )
+
+                val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+                intent!!.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+
+                val pendingIntent: PendingIntent = PendingIntent.getActivity(
                     context,
                     0,
                     intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                 )
 
-                setContentIntent(contentIntent)
+                setContentIntent(pendingIntent)
 
                 // Stop the service when the notification is swiped away
                 setDeleteIntent(

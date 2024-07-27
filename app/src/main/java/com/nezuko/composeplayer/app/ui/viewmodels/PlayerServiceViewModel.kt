@@ -7,6 +7,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.nezuko.domain.callback.ConnectionCallbackInterface
 import com.nezuko.domain.callback.ControllerCallbackInterface
 import com.nezuko.domain.model.Audio
@@ -24,6 +29,12 @@ import com.nezuko.domain.usecase.SeekToUseCase
 import com.nezuko.domain.usecase.SetPlayerCallbacksUseCase
 import com.nezuko.domain.usecase.SkipToQueueItemUseCase
 import com.nezuko.domain.usecase.StopUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlin.math.log
 
 class PlayerServiceViewModel(
     private val play: PlayUseCase,
@@ -44,27 +55,29 @@ class PlayerServiceViewModel(
     //
 ) : ViewModel() {
 
+    val controllerCallback = object : ControllerCallbackInterface {
+        override fun onMetadataChanged(metadata: Audio) {
+            updateAudio(metadata)
+        }
+
+        override fun onPlaybackStateChanged(state: PlaybackState) {
+            updateState(state)
+
+            updatePlaying(state.state == PlaybackState.State.PLAYING)
+        }
+
+        override fun onQueueChanged(list: ArrayList<Audio>) {
+
+        }
+    }
+
+    val connectionCallback = object : ConnectionCallbackInterface {
+        override fun onConnected() {
+            Log.i(TAG, "onConnected: connected!!!")
+        }
+    }
+
     init {
-        val controllerCallback = object : ControllerCallbackInterface {
-            override fun onMetadataChanged(metadata: Audio) {
-                updateAudio(metadata)
-            }
-
-            override fun onPlaybackStateChanged(state: PlaybackState) {
-                updateState(state)
-            }
-
-            override fun onQueueChanged(list: ArrayList<Audio>) {
-
-            }
-        }
-
-        val connectionCallback = object : ConnectionCallbackInterface {
-            override fun onConnected() {
-                Log.i(TAG, "onConnected: connected!!!")
-            }
-        }
-
         setPlayerCallbacksUseCase.execute(controllerCallback, connectionCallback)
     }
 
@@ -83,32 +96,36 @@ class PlayerServiceViewModel(
     }
 
     private val TAG = "PLAYER_VIEWMODEL"
-//    private val _audio = MutableLiveData<Audio>()
-//    val audio: LiveData<Audio>
-//        get() = _audio
-
-    var audio by mutableStateOf<Audio?>(null)
+    private val _audio = MutableLiveData<Audio>()
+    val audio: LiveData<Audio>
+        get() = _audio
 
     fun updateAudio(newAudio: Audio) {
-        audio = newAudio
-        Log.i(TAG, "onMetadataChanged: $audio")
-
+        _audio.value = newAudio
     }
 
-//    private val _state = MutableLiveData<PlaybackState>()
-//    val state: LiveData<PlaybackState>
-//        get() = _state
-
-    var state by mutableStateOf<PlaybackState?>(null)
+    private val _state = MutableLiveData<PlaybackState>()
+    val state: LiveData<PlaybackState>
+        get() = _state
 
     fun updateState(newState: PlaybackState) {
-        state = newState
-        Log.i(TAG, "onPlaybackStateChanged: $state")
-
+        _state.value = newState
     }
 
+    private val _isPlaying = MutableLiveData(false)
+    val isPlaying: LiveData<Boolean>
+        get() = _isPlaying
 
-    fun onStart() = onServiceStartUseCase.execute()
+
+    fun updatePlaying(value: Boolean) {
+        Log.i(TAG, "updatePlaying: $value")
+        _isPlaying.value = value
+    }
+
+    fun onStart() {
+        onServiceStartUseCase.execute()
+    }
+
     fun onStop() = onServiceStopUseCase.execute()
 
     fun play() = play.execute()
@@ -119,4 +136,11 @@ class PlayerServiceViewModel(
     fun seekTo(ms: Long) = seekTo.execute(ms)
     fun skipToQueueItem(id: Long) = skipToQueueItemUseCase.execute(id)
     fun playOrPause() = playOrPauseUseCase.execute()
+}
+
+object PlayerServiceViewModelStoreOwner : ViewModelStoreOwner {
+    private val _viewModelStore = ViewModelStore()
+
+    override val viewModelStore: ViewModelStore
+        get() = _viewModelStore
 }

@@ -28,12 +28,13 @@ class UserViewModel(
         viewModelScope.launch {
             Log.i(TAG, "getCurrentUser: ")
             getCurrentUserIDUseCase.execute().getOrNull().let {
-                if (it != null) _uid.value = it
+                if (it != null) setUID(it)
             }
         }
     }
 
     fun setUID(id: String) {
+        Log.i(TAG, "setUID: ${uid.hasObservers() || _uid.hasObservers()}")
         _uid.value = id
     }
 
