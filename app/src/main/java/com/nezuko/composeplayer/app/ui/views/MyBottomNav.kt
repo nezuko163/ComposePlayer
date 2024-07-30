@@ -67,12 +67,6 @@ fun MyBottomNavigation(
                     onClick = {
                         if (tab.route != currentRoute) {
                             navController.navigate(tab.route) {
-                                anim {
-                                    enter = 0
-                                    exit = 0
-                                    popEnter = 0
-                                    popExit = 0
-                                }
                                 navController.graph.startDestinationRoute?.let {
                                     popUpTo(it) {
                                         saveState = true

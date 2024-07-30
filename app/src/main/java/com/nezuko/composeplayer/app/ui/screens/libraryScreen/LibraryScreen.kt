@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -34,20 +36,15 @@ fun PlaylistsList(
     onDotsCLick: (Playlist) -> Unit,
     viewModel: PlaylistsViewModel = koinViewModel()
 ) {
-    val playlists = viewModel.playlistsList.value
-    val context = LocalContext.current
+    Log.i(TAG, "PlaylistsList: recomp")
+    val playlists by viewModel.playlistsList.observeAsState()
+    viewModel.loadPlaylists()
 
     if (playlists == null) {
         Text(text = "Плейлистов нетууу", modifier.fillMaxSize(), textAlign = TextAlign.Center)
     } else {
-        Log.i(TAG, "PlaylistsList: ${viewModel.allTracksPlaylist.title}")
-        PlaylistCard(
-            playlist = viewModel.allTracksPlaylist,
-            onPlaylistClick = onPlaylistClick,
-            onDotsClick = onDotsCLick
-        )
-
-        playlists.forEachIndexed { index: Int, playlist: Playlist ->
+        Log.i(TAG, "PlaylistsList: $playlists")
+        playlists!!.forEachIndexed { index: Int, playlist: Playlist ->
             PlaylistCard(
                 playlist = playlist,
                 onPlaylistClick = onPlaylistClick,

@@ -10,7 +10,7 @@ fun NavGraphBuilder.controlPlaingTrack(
 
 ) {
     composable(RoutesNames.CONTROL_PLAYING_TRACK_SCREEN) {
-        ControlPlayingTrackScreen()
+        ControlPlayingTrackScreen(onBackPressed = onBackPressed)
     }
 }
 

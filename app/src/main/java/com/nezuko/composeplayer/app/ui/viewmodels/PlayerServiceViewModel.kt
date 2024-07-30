@@ -58,6 +58,7 @@ class PlayerServiceViewModel(
     val controllerCallback = object : ControllerCallbackInterface {
         override fun onMetadataChanged(metadata: Audio) {
             updateAudio(metadata)
+            updateQueueTrackId(metadata.queueId)
         }
 
         override fun onPlaybackStateChanged(state: PlaybackState) {
@@ -79,6 +80,7 @@ class PlayerServiceViewModel(
 
     init {
         setPlayerCallbacksUseCase.execute(controllerCallback, connectionCallback)
+
     }
 
 
@@ -118,8 +120,19 @@ class PlayerServiceViewModel(
 
 
     fun updatePlaying(value: Boolean) {
-        Log.i(TAG, "updatePlaying: $value")
         _isPlaying.value = value
+    }
+
+
+    private val _currentQueueTrackId = MutableLiveData<Long>()
+    val currentQueueTrackId: LiveData<Long>
+        get() = _currentQueueTrackId
+
+    fun updateQueueTrackId(id: Long) {
+        if (id == _currentQueueTrackId.value) return
+        _currentQueueTrackId.value = id
+        skipToQueueItem(id)
+        Log.i(TAG, "updateQueueTrackId: ${currentQueueTrackId.value}")
     }
 
     fun onStart() {

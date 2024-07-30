@@ -15,6 +15,8 @@ class PlaylistViewModel(
     private val getTrackListByPlaylistIdUseCase: GetTrackListByPlaylistIdUseCase,
     private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
+    private val TAG = "PLAYLIST_VIEW_MODEL"
+
     private val _playlist = MutableLiveData<Playlist>()
     val playlist: LiveData<Playlist>
         get() = _playlist

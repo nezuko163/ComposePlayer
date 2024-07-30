@@ -41,6 +41,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.nezuko.composeplayer.R
 import com.nezuko.composeplayer.app.utils.bitmapFromResId
 import com.nezuko.composeplayer.app.utils.getBitmapFromUri
+import com.nezuko.composeplayer.ui.theme.Aqua
 import com.nezuko.domain.model.Audio
 
 
@@ -50,10 +51,11 @@ private val TAG = "TRACK_CARD"
 @Composable
 fun TrackCard(
     audio: Audio = Audio(),
+    isPlaying: Boolean = false,
     onTrackClick: (Audio) -> Unit = {},
     onDotsClick: (Audio) -> Unit = {},
 ) {
-    Log.i(TAG, "TrackCard: ${audio.queueId}")
+    Log.i(TAG, "TrackCard: recomp ${audio.queueId}")
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -86,7 +88,7 @@ fun TrackCard(
                     modifier = Modifier
                         .weight(0.5f)
                         .wrapContentHeight(Alignment.CenterVertically),
-                    color = Color.Black
+                    color = if (isPlaying) Aqua else Color.Black
                 )
                 Text(
                     text = audio.artist,

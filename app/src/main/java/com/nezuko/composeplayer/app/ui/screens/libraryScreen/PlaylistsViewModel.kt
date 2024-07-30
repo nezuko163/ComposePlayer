@@ -16,7 +16,11 @@ class PlaylistsViewModel(
     val playlistsList: LiveData<ArrayList<Playlist>>
         get() = _playlistsList
 
-    var allTracksPlaylist = getAllLocalTracksUseCase.execute()
+    fun loadPlaylists() {
+        viewModelScope.launch {
+            _playlistsList.value = arrayListOf(getAllLocalTracksUseCase.execute())
+        }
+    }
 
     fun setPlaylist(list: ArrayList<Playlist>) {
         _playlistsList.value = list

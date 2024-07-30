@@ -1,6 +1,7 @@
 package com.nezuko.composeplayer.app.ui.views
 
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,6 +16,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -24,7 +27,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,12 +43,15 @@ import com.nezuko.composeplayer.app.ui.viewmodels.PlayerServiceViewModelStoreOwn
 import com.nezuko.composeplayer.app.ui.viewmodels.ShouldShowBottomBarViewModel
 import com.nezuko.composeplayer.app.ui.viewmodels.ShouldShowBottpmBarVMStoreOwner
 import com.nezuko.composeplayer.app.utils.getGlobalViewModel
+import com.nezuko.composeplayer.ui.theme.LightBlue
 import com.nezuko.data.R
 import com.nezuko.domain.model.Audio
 import com.nezuko.domain.model.PlaybackState
+import kotlinx.coroutines.launch
 
 private val TAG = "PLAYING_TRACK_BOTTOM_BAR"
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PlayingTrackBottomBar(
     onClick: (Audio) -> Unit = {},
@@ -58,22 +66,57 @@ fun PlayingTrackBottomBar(
             storeOwner = ShouldShowBottpmBarVMStoreOwner
         )
 ) {
-    val audio by playerServiceViewModel.audio.observeAsState()
+    val queue by playerServiceViewModel.queue.observeAsState()
     val isPlaying by playerServiceViewModel.isPlaying.observeAsState()
+    val trackId by playerServiceViewModel.currentQueueTrackId.observeAsState()
     val shouldShow by shouldShowBottomBarVM.shouldShow.observeAsState()
+    var isFirst = true
 
-    if (audio == null || isPlaying == null) return
+    if (isPlaying == null) return
 
     if (shouldShow != null) if (!shouldShow!!) return
 
-    Log.i(TAG, "PlayingTrackBottomBar: asd")
 
-    PlayingTrackBottomBarView(
-        onClick,
-        { playerServiceViewModel.playOrPause() },
-        audio!!,
-        isPlaying!!
-    )
+    val pagerState =
+        rememberPagerState(
+            pageCount = { queue?.size ?: 0 },
+            initialPage = (trackId ?: 0).toInt()
+        )
+    val coroutineScope = rememberCoroutineScope()
+
+
+    Log.i(TAG, "SearchScreen: recomp")
+
+    LaunchedEffect(trackId) {
+        coroutineScope.launch {
+            if (trackId == null) return@launch
+            pagerState.animateScrollToPage(trackId!!.toInt())
+        }
+    }
+
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.settledPage }.collect { page ->
+            Log.i(TAG, "SearchScreen: pager updated")
+            if (isFirst) {
+                isFirst = false
+            } else {
+                playerServiceViewModel.updateQueueTrackId(page.toLong())
+            }
+        }
+    }
+
+
+    HorizontalPager(
+        modifier = Modifier.background(LightBlue),
+        state = pagerState
+    ) { page: Int ->
+        PlayingTrackBottomBarView(
+            onClick = onClick,
+            onPlayOrPauseClick =  { playerServiceViewModel.playOrPause() },
+            audio = playerServiceViewModel.audio.value!!,
+            isPlaying = isPlaying!!
+        )
+    }
 }
 
 

@@ -2,6 +2,7 @@ package com.nezuko.composeplayer.app.ui.nav
 
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
@@ -23,15 +24,11 @@ const val TAG = "APP_NAVIGATION"
 @Composable
 fun AppNavigation(navHostController: NavHostController, modifier: Modifier) {
     val context = LocalContext.current
+    val onBackedPressedDispatcher = (context as ComponentActivity).onBackPressedDispatcher
     NavHost(
         navController = navHostController,
         startDestination = RoutesNames.MAIN_SCREEN,
         modifier = modifier,
-
-        enterTransition = { EnterTransition.None },
-        exitTransition = { ExitTransition.None },
-        popExitTransition = { ExitTransition.None },
-        popEnterTransition = { EnterTransition.None }
     ) {
         main()
 
@@ -47,6 +44,8 @@ fun AppNavigation(navHostController: NavHostController, modifier: Modifier) {
         )
         playlist()
 
-        controlPlaingTrack()
+        controlPlaingTrack(onBackPressed = {
+            onBackedPressedDispatcher.onBackPressed()
+        })
     }
 }

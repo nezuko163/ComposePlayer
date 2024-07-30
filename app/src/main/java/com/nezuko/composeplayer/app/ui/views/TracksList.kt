@@ -1,49 +1,55 @@
 package com.nezuko.composeplayer.app.ui.views
 
 import android.util.Log
-import android.widget.Toast
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import com.nezuko.composeplayer.app.ui.screens.libraryScreen.playlistScreen.PlaylistViewModel
-import com.nezuko.composeplayer.app.utils.repeatList
 import com.nezuko.domain.model.Audio
-import org.koin.androidx.compose.koinViewModel
 
-const val TAG2 = "TRACK_LIST"
+private const val TAG = "TRACK_LIST"
 
 @Composable
 fun TracksList(
     trackList: ArrayList<Audio>?,
     onTrackClick: (Audio) -> Unit,
-    modifier: Modifier = Modifier
+    playingTrackIndex: Int,
+    modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
+    if (trackList == null) return
 
+    val items = rememberOptimizedTrackList(trackList = trackList)
+    Log.i(TAG, "TracksList: recomp")
+    LazyColumn {
+//            items(
+//                items = items,
+//                key = { audio: Audio -> audio.queueId }
+//            ) {
+//                TrackCard(
+//                    audio = it,
+//                    onTrackClick = { onTrackClick.invoke(it) },
+//                    onDotsClick = {}
+//                )
+//            }
 
-//    if (trackList == null) return
-    trackList?.run {
-        val items = rememberOptimizedTrackList(trackList = trackList)
-        Log.i(TAG2, "TracksList: recomp")
-        LazyColumn {
-            items(
-                items = items,
-                key = { audio: Audio -> audio.queueId }
-            ) {
-                TrackCard(
-                    audio = it,
-                    onTrackClick = { onTrackClick.invoke(it) },
-                    onDotsClick = {}
-                )
-            }
-
+        itemsIndexed(
+            items = items,
+            key = { _: Int, audio: Audio -> audio.queueId })
+        { index: Int, audio: Audio ->
+            val isPlaying = index == playingTrackIndex
+//            val isPlaying = index == playingTrackIndex
+            TrackCard(
+                audio = audio,
+                isPlaying = isPlaying,
+                onTrackClick = onTrackClick,
+                onDotsClick = {}
+            )
         }
+
 
 //        ПОТОМ МОЖНО ЧЕРЕЗ ПАГИНАЦИЮ КАК-ТО ЧТОБЫ НЕ ЛАГАЛО ПРИ СКРОЛЛЕ
 //        Column(modifier.verticalScroll(rememberScrollState())) {

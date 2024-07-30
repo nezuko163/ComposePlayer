@@ -10,9 +10,10 @@ import com.nezuko.composeplayer.app.ui.viewmodels.PlayerServiceViewModelStoreOwn
 import com.nezuko.composeplayer.app.ui.views.TracksList
 import com.nezuko.composeplayer.app.utils.getGlobalViewModel
 import com.nezuko.domain.model.Audio
+import com.nezuko.domain.model.Playlist
 import org.koin.androidx.compose.koinViewModel
 
-const val TAG = "PLAYLIST_SCREEN"
+private const val TAG = "PLAYLIST_SCREEN"
 
 @Composable
 fun PlaylistScreen(
@@ -25,12 +26,16 @@ fun PlaylistScreen(
             PlayerServiceViewModelStoreOwner
         )
 ) {
+
+    Log.i(TAG, "PlaylistScreen: recomp")
     playlistViewModel.findPlaylist(id)
     val tracks by playlistViewModel.trackList.observeAsState()
+    val trackId by playerServiceViewModel.currentQueueTrackId.observeAsState()
+    Log.i(TAG, "PlaylistScreen: $trackId")
 
     TracksList(
-        tracks,
-        { audio: Audio ->
+        trackList =  tracks,
+        onTrackClick =  { audio: Audio ->
             if (audio.meduaUrl.isNotEmpty()) {
                 if (playerServiceViewModel.queue.value == tracks) {
                     Log.i(TAG, "PlaylistScreen: audio = ${playerServiceViewModel.audio}")
@@ -39,16 +44,17 @@ fun PlaylistScreen(
                         playerServiceViewModel.playOrPause()
                         Log.i(TAG, "PlaylistScreen: pause")
                     } else {
-                        playerServiceViewModel.skipToQueueItem(audio.queueId)
+                        playerServiceViewModel.updateQueueTrackId(audio.queueId)
                         playerServiceViewModel.play()
                         Log.i(TAG, "PlaylistScreen: play")
                     }
                 } else {
                     playerServiceViewModel.setQueue(tracks!!)
-                    playerServiceViewModel.skipToQueueItem(audio.queueId)
+                    playerServiceViewModel.updateQueueTrackId(audio.queueId)
                     playerServiceViewModel.play()
                 }
             }
-        }
+        },
+        playingTrackIndex = trackId?.toInt() ?: -1
     )
 }

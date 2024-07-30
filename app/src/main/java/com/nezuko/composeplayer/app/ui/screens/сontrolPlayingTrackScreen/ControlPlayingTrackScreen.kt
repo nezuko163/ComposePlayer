@@ -20,8 +20,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Slider
@@ -40,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -69,15 +72,13 @@ fun ControlPlayingTrackScreen(
             PlayerServiceViewModelStoreOwner
         )
 ) {
-    val audio by playerServiceViewModel.audio.observeAsState()
-
-    val backPressedDispatcher = (LocalContext.current as ComponentActivity).onBackPressedDispatcher
-
-    if (audio == null) return
     ControlPlayingTrackView(
-        audio!!,
-        onBackPressed = {
-            backPressedDispatcher.onBackPressed()
+        audio = audio!!,
+        queue = queue!!,
+        onBackPressed = onBackPressed,
+        onPopUpMenuClick = {},
+        onPageChanged = { page ->
+            playerServiceViewModel.updateQueueTrackId(page.toLong())
         }
     )
 }
@@ -86,8 +87,10 @@ fun ControlPlayingTrackScreen(
 @Composable
 private fun ControlPlayingTrackView(
     audio: Audio = Audio(),
+    queue: ArrayList<Audio> = arrayListOf(),
     onBackPressed: () -> Unit = {},
     onPopUpMenuClick: () -> Unit = {},
+    onPageChanged: (Int) -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -150,17 +153,16 @@ private fun ControlPlayingTrackView(
             )
         }
 
-        AsyncImage(
-            model = audio.artUrl,
-            error = painterResource(id = com.nezuko.data.R.drawable.img),
-            contentDescription = "art",
+        PagerBlock(
             modifier = Modifier
                 .padding()
                 .size(350.dp)
                 .padding(30.dp)
                 .align(Alignment.CenterHorizontally)
                 .clip(RoundedCornerShape(20.dp))
-                .border(2.dp, color = Color.Black)
+                .border(2.dp, color = Color.Black),
+            queue = queue,
+            onPageChanged = onPageChanged
         )
 
         StateBlock()
@@ -307,19 +309,22 @@ private fun ButtonsBlockView(
     onNextClick: () -> Unit = {},
 ) {
     Log.i(TAG, "ButtonsBlockView: recomp")
+    val size = 80.dp
     Row(modifier = modifier) {
         Image(
             modifier = Modifier
-                .size(40.dp)
+                .size(size)
                 .clickable { onPreviousClick() },
             contentScale = ContentScale.Fit,
             painter = painterResource(id = com.nezuko.data.R.drawable.skip_to_previous),
             contentDescription = "previous"
         )
 
+        Spacer(modifier = Modifier.width(50.dp))
+
         Image(
             modifier = Modifier
-                .size(40.dp)
+                .size(size)
                 .clickable { onPlayOrPauseClick() },
             contentScale = ContentScale.Fit,
             painter = painterResource(
@@ -330,15 +335,34 @@ private fun ButtonsBlockView(
             contentDescription = "pause or play"
         )
 
+        Spacer(modifier = Modifier.width(50.dp))
+
         Image(
             modifier = Modifier
-                .size(40.dp)
+                .size(size)
                 .clickable { onNextClick() },
             contentScale = ContentScale.Fit,
             painter = painterResource(id = com.nezuko.data.R.drawable.skip_to_next),
             contentDescription = "next"
         )
     }
+}
+
+@Composable
+private fun PagerBlock(
+    modifier: Modifier = Modifier,
+    playerServiceViewModel: PlayerServiceViewModel =
+        getGlobalViewModel(
+            viewModelClass = PlayerServiceViewModel::class.java,
+            storeOwner = PlayerServiceViewModelStoreOwner
+        )
+) {
+    AsyncImage(
+        model = audio.artUrl,
+        error = painterResource(id = com.nezuko.data.R.drawable.img),
+        contentDescription = "art",
+        modifier = Modifier.focusModifier()
+    )
 }
 
 
