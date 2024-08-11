@@ -18,8 +18,10 @@ import com.nezuko.composeplayer.app.ui.nav.AppNavigation
 import com.nezuko.composeplayer.app.ui.nav.AuthNavigation
 import com.nezuko.composeplayer.app.ui.viewmodels.UserViewModel
 import com.nezuko.composeplayer.app.ui.screens.startScreen.StartScreen
+import com.nezuko.composeplayer.app.ui.viewmodels.getUserViewModel
 import com.nezuko.composeplayer.app.ui.views.MyBottomNavigation
 import com.nezuko.composeplayer.app.utils.ShowMainFeature
+import com.nezuko.domain.model.UserProfile
 import org.koin.androidx.compose.koinViewModel
 
 const val TAG = "APP_MEH"
@@ -28,7 +30,7 @@ const val TAG = "APP_MEH"
 fun App(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    userViewModel: UserViewModel = koinViewModel()
+    userViewModel: UserViewModel = getUserViewModel()
 ) {
     val uid by userViewModel.uid.observeAsState()
     LaunchedEffect(Unit) {
@@ -42,11 +44,25 @@ fun App(
 
     Log.i(TAG, "App: id = $uid")
     if (!uid.isNullOrEmpty()) {
+        userViewModel.getUserProfileById(
+            uid!!,
+            onSuccess = { user: UserProfile ->
+                Log.i(TAG, "App: user = $user")
+                userViewModel.updateUserProfile(user)
+            },
+            onFailure = {
+                Log.i(TAG, "App: чо бля")
+            }
+        )
         ShowMainFeature(navController = navController)
     } else {
-        AuthNavigation(navHostController = navController) { it: String ->
-            userViewModel.setUID(it)
-        }
+        AuthNavigation(
+            navHostController = navController,
+            onAuthComplete = { it: String ->
+                userViewModel.setUID(it)
+            },
+        )
+
 
     }
 

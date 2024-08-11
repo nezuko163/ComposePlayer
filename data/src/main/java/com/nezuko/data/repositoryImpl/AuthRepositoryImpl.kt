@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.nezuko.domain.repository.AuthRepository
@@ -90,6 +91,47 @@ class AuthRepositoryImpl(
         onFailure: () -> Unit,
     ): Result<Boolean> {
         TODO("Not yet implemented")
+    }
+
+    override suspend fun isEmailFree(
+        email: String,
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit
+    ) {
+        withContext(ioDispatcher) {
+            val auth = FirebaseAuth.getInstance()
+            auth.fetchSignInMethodsForEmail(email)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        // Получаем список методов входа, связанных с адресом электронной почты
+                        val signInMethods = task.result?.signInMethods ?: emptyList()
+
+                        if (signInMethods.isNotEmpty()) {
+                            // Адрес электронной почты уже используется
+                            Log.i(TAG, "isEmailFree: Email is already in use.")
+                            onFailure()
+                        } else {
+                            // Адрес электронной почты доступен, регистрируем нового пользователя
+                            onSuccess()
+                        }
+                    } else {
+                        // Обработка ошибки при проверке email
+                        val error = task.exception
+                        when (error) {
+                            is FirebaseAuthInvalidCredentialsException -> Log.i(
+                                TAG,
+                                "isEmailFree: Invalid email: ${error.message}"
+                            )
+
+                            else -> Log.i(
+                                TAG,
+                                "isEmailFree: Error checking email: ${error?.message}"
+                            )
+                        }
+                        onFailure()
+                    }
+                }
+        }
     }
 
     override suspend fun getCurrentUserID(): Result<String> = withContext(ioDispatcher) {

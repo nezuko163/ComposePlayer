@@ -3,16 +3,23 @@ package com.nezuko.composeplayer.app.ui.views
 import android.util.Log
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.nezuko.domain.model.Audio
+import kotlinx.coroutines.launch
 
 private const val TAG = "TRACK_LIST"
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TracksList(
     trackList: ArrayList<Audio>?,
@@ -21,6 +28,17 @@ fun TracksList(
     modifier: Modifier = Modifier,
 ) {
     if (trackList == null) return
+
+    val sheetState = rememberModalBottomSheetState()
+    val coroutineScope = rememberCoroutineScope()
+    var showBottomSheet by remember { mutableStateOf(false) }
+
+
+    CustomModalBottomSheet(
+        sheetState = sheetState,
+        coroutineScope = coroutineScope
+    )
+
 
     val items = rememberOptimizedTrackList(trackList = trackList)
     Log.i(TAG, "TracksList: recomp")
@@ -46,7 +64,9 @@ fun TracksList(
                 audio = audio,
                 isPlaying = isPlaying,
                 onTrackClick = onTrackClick,
-                onDotsClick = {}
+                onDotsClick = {
+                    showBottomSheet = true
+                }
             )
         }
 

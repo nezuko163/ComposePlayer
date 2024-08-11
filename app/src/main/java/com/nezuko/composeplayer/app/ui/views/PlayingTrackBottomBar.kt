@@ -42,6 +42,8 @@ import com.nezuko.composeplayer.app.ui.viewmodels.PlayerServiceViewModel
 import com.nezuko.composeplayer.app.ui.viewmodels.PlayerServiceViewModelStoreOwner
 import com.nezuko.composeplayer.app.ui.viewmodels.ShouldShowBottomBarViewModel
 import com.nezuko.composeplayer.app.ui.viewmodels.ShouldShowBottpmBarVMStoreOwner
+import com.nezuko.composeplayer.app.ui.viewmodels.getPlayerServiceViewModel
+import com.nezuko.composeplayer.app.ui.viewmodels.getShouldShowBottomBarViewModel
 import com.nezuko.composeplayer.app.utils.getGlobalViewModel
 import com.nezuko.composeplayer.ui.theme.LightBlue
 import com.nezuko.data.R
@@ -55,24 +57,17 @@ private val TAG = "PLAYING_TRACK_BOTTOM_BAR"
 @Composable
 fun PlayingTrackBottomBar(
     onClick: (Audio) -> Unit = {},
-    playerServiceViewModel: PlayerServiceViewModel =
-        getGlobalViewModel(
-            viewModelClass = PlayerServiceViewModel::class.java,
-            PlayerServiceViewModelStoreOwner
-        ),
-    shouldShowBottomBarVM: ShouldShowBottomBarViewModel =
-        getGlobalViewModel(
-            viewModelClass = ShouldShowBottomBarViewModel::class.java,
-            storeOwner = ShouldShowBottpmBarVMStoreOwner
-        )
+    playerServiceViewModel: PlayerServiceViewModel = getPlayerServiceViewModel(),
+    shouldShowBottomBarVM: ShouldShowBottomBarViewModel = getShouldShowBottomBarViewModel()
 ) {
+    val audio by playerServiceViewModel.audio.observeAsState()
     val queue by playerServiceViewModel.queue.observeAsState()
     val isPlaying by playerServiceViewModel.isPlaying.observeAsState()
     val trackId by playerServiceViewModel.currentQueueTrackId.observeAsState()
     val shouldShow by shouldShowBottomBarVM.shouldShow.observeAsState()
     var isFirst = true
 
-    if (isPlaying == null) return
+    if (isPlaying == null || audio == null || queue == null) return
 
     if (shouldShow != null) if (!shouldShow!!) return
 
@@ -112,8 +107,8 @@ fun PlayingTrackBottomBar(
     ) { page: Int ->
         PlayingTrackBottomBarView(
             onClick = onClick,
-            onPlayOrPauseClick =  { playerServiceViewModel.playOrPause() },
-            audio = playerServiceViewModel.audio.value!!,
+            onPlayOrPauseClick = { playerServiceViewModel.playOrPause() },
+            audio = queue!![page],
             isPlaying = isPlaying!!
         )
     }

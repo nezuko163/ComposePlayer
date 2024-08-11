@@ -17,6 +17,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.nezuko.composeplayer.app.ui.viewmodels.ShouldShowBottomBarViewModel
 import com.nezuko.composeplayer.app.ui.viewmodels.ShouldShowBottpmBarVMStoreOwner
+import com.nezuko.composeplayer.app.ui.viewmodels.getShouldShowBottomBarViewModel
 import com.nezuko.composeplayer.app.utils.BottomTabs
 import com.nezuko.composeplayer.app.utils.getGlobalViewModel
 
@@ -26,11 +27,7 @@ private val TAG = "BOTTOM_NAVIGATION"
 @Composable
 fun MyBottomNavigation(
     navController: NavController,
-    shouldShowBottomBarVM: ShouldShowBottomBarViewModel =
-        getGlobalViewModel(
-            viewModelClass = ShouldShowBottomBarViewModel::class.java,
-            storeOwner = ShouldShowBottpmBarVMStoreOwner
-        )
+    shouldShowBottomBarVM: ShouldShowBottomBarViewModel = getShouldShowBottomBarViewModel()
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: BottomTabs.HOME.route

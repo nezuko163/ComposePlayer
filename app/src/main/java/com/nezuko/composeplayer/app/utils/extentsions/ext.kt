@@ -1,6 +1,6 @@
 package com.nezuko.composeplayer.app.utils.extentsions
 
-import androidx.compose.material3.Text
+import android.net.Uri
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavBackStackEntry
@@ -32,25 +32,27 @@ fun NavGraphBuilder.main(
 
 fun NavGraphBuilder.library(
     onPlaylistClick: (playlist: Playlist) -> Unit,
-    onDotsClick: (Playlist) -> Unit
+    onDotsClick: (Playlist) -> Unit,
+    onIconProfileClick: (uid: String) -> Unit,
 ) {
     composable(
         RoutesNames.MY_LIBRARY_SCREEN,
 //        enterTransition = { fadeIn(animationSpec = tween(0)) },
 //        exitTransition = { fadeOut(animationSpec = tween(0)) }
     ) {
-        LibraryScreen(Modifier, onPlaylistClick, onDotsClick)
+        LibraryScreen(Modifier, onPlaylistClick, onDotsClick, onIconProfileClick)
     }
 }
 
 fun NavGraphBuilder.search(
+    onNavigate: (uri: Uri) -> Unit
 ) {
     composable(
         RoutesNames.SEARCH_SCREEN,
 //        enterTransition = { fadeIn(animationSpec = tween(0)) },
 //        exitTransition = { fadeOut(animationSpec = tween(0)) }
     ) {
-        SearchScreen()
+        SearchScreen(onNavigate)
     }
 }
 

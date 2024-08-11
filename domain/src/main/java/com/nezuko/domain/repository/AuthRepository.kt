@@ -31,6 +31,12 @@ interface AuthRepository {
         onFailure: () -> Unit = {},
     ): Result<Boolean>
 
+    suspend fun isEmailFree(
+        email: String,
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit
+    )
+
     suspend fun getCurrentUserID(): Result<String>
 
     fun initializeApp()

@@ -1,5 +1,6 @@
 package com.nezuko.composeplayer.app.ui.nav
 
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -10,6 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import com.nezuko.composeplayer.app.ui.screens.cropImageScreen.cropImage
+import com.nezuko.composeplayer.app.ui.screens.cropImageScreen.navigateToCropImageScreen
+import com.nezuko.composeplayer.app.ui.screens.profileScreen.navigateToProfileScreen
+import com.nezuko.composeplayer.app.ui.screens.profileScreen.profile
 import com.nezuko.composeplayer.app.ui.screens.сontrolPlayingTrackScreen.controlPlaingTrack
 import com.nezuko.composeplayer.app.utils.extentsions.library
 import com.nezuko.composeplayer.app.utils.extentsions.main
@@ -19,7 +25,7 @@ import com.nezuko.composeplayer.app.utils.extentsions.search
 import com.nezuko.domain.model.Playlist
 
 
-const val TAG = "APP_NAVIGATION"
+private const val TAG = "APP_NAVIGATION"
 
 @Composable
 fun AppNavigation(navHostController: NavHostController, modifier: Modifier) {
@@ -32,7 +38,17 @@ fun AppNavigation(navHostController: NavHostController, modifier: Modifier) {
     ) {
         main()
 
-        search()
+        search(
+            onNavigate = { uri: Uri ->
+                navHostController.navigateToCropImageScreen(uri)
+            }
+        )
+
+        cropImage(
+            onBackPressedDispatcher = {
+                onBackedPressedDispatcher.onBackPressed()
+            }
+        )
 
         library(
             onPlaylistClick = { playlist: Playlist ->
@@ -40,6 +56,9 @@ fun AppNavigation(navHostController: NavHostController, modifier: Modifier) {
             },
             onDotsClick = { playlist ->
                 Toast.makeText(context, playlist.title, Toast.LENGTH_SHORT).show()
+            },
+            onIconProfileClick = { uid: String ->
+                navHostController.navigateToProfileScreen(uid)
             }
         )
         playlist()
@@ -47,5 +66,7 @@ fun AppNavigation(navHostController: NavHostController, modifier: Modifier) {
         controlPlaingTrack(onBackPressed = {
             onBackedPressedDispatcher.onBackPressed()
         })
+
+        profile()
     }
 }

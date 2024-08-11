@@ -1,7 +1,10 @@
 [versions]
 agp = "8.4.0"
 coilCompose = "2.6.0"
+croppy = "1.2.0"
+croppyVersion = "0.2"
 firebaseBom = "33.1.1"
+firebaseUiStorage = "8.0.2"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -36,6 +39,7 @@ media = "1.7.0"
 
 googleGmsGoogleServices = "4.4.2"
 firebaseAuth = "23.0.0"
+constraintlayout = "2.1.4"
 
 
 [libraries]
@@ -43,8 +47,11 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-material = { module = "androidx.compose.material:material", version.ref = "materialVersion" }
 androidx-material3-vlatestversion = { module = "androidx.compose.material3:material3", version.ref = "material3Version" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+croppy = { module = "com.github.lyrebirdstudio:Croppy", version.ref = "croppyVersion" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-database = { module = "com.google.firebase:firebase-database" }
+firebase-storage = { module = "com.google.firebase:firebase-storage" }
+firebase-ui-storage = { module = "com.firebaseui:firebase-ui-storage", version.ref = "firebaseUiStorage" }
 google-firebase-auth = { module = "com.google.firebase:firebase-auth" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

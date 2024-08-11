@@ -7,6 +7,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import com.nezuko.composeplayer.app.ui.viewmodels.PlayerServiceViewModel
 import com.nezuko.composeplayer.app.ui.viewmodels.PlayerServiceViewModelStoreOwner
+import com.nezuko.composeplayer.app.ui.viewmodels.getPlayerServiceViewModel
 import com.nezuko.composeplayer.app.ui.views.TracksList
 import com.nezuko.composeplayer.app.utils.getGlobalViewModel
 import com.nezuko.domain.model.Audio
@@ -20,18 +21,15 @@ fun PlaylistScreen(
     id: Long,
     modifier: Modifier = Modifier,
     playlistViewModel: PlaylistViewModel = koinViewModel(),
-    playerServiceViewModel: PlayerServiceViewModel =
-        getGlobalViewModel(
-            viewModelClass = PlayerServiceViewModel::class.java,
-            PlayerServiceViewModelStoreOwner
-        )
+    playerServiceViewModel: PlayerServiceViewModel = getPlayerServiceViewModel(),
 ) {
 
     Log.i(TAG, "PlaylistScreen: recomp")
     playlistViewModel.findPlaylist(id)
     val tracks by playlistViewModel.trackList.observeAsState()
     val trackId by playerServiceViewModel.currentQueueTrackId.observeAsState()
-    Log.i(TAG, "PlaylistScreen: $trackId")
+
+
 
     TracksList(
         trackList =  tracks,
@@ -39,7 +37,6 @@ fun PlaylistScreen(
             if (audio.meduaUrl.isNotEmpty()) {
                 if (playerServiceViewModel.queue.value == tracks) {
                     Log.i(TAG, "PlaylistScreen: audio = ${playerServiceViewModel.audio}")
-//                    Log.i(TAG, "PlaylistScreen: playerServiceViewModel.audio = ${playerServiceViewModel.audio.value}")
                     if (playerServiceViewModel.audio.value?.queueId == audio.queueId) {
                         playerServiceViewModel.playOrPause()
                         Log.i(TAG, "PlaylistScreen: pause")

@@ -1,10 +1,9 @@
 package com.nezuko.composeplayer.app.ui.screens.сontrolPlayingTrackScreen
 
-import android.hardware.lights.Light
+import android.icu.text.CaseMap.Title
 import android.util.Log
-import androidx.activity.ComponentActivity
-import androidx.activity.OnBackPressedDispatcher
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -24,12 +23,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
-import androidx.compose.material3.SliderState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableFloatState
@@ -38,56 +39,67 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.view.KeyEventDispatcher.Component
 import coil.compose.AsyncImage
 import com.nezuko.composeplayer.R
 import com.nezuko.composeplayer.app.ui.viewmodels.PlayerServiceViewModel
 import com.nezuko.composeplayer.app.ui.viewmodels.PlayerServiceViewModelStoreOwner
+import com.nezuko.composeplayer.app.ui.viewmodels.getPlayerServiceViewModel
+import com.nezuko.composeplayer.app.ui.views.CustomModalBottomSheet
 import com.nezuko.composeplayer.app.utils.getGlobalViewModel
 import com.nezuko.composeplayer.ui.theme.Aqua
 import com.nezuko.composeplayer.ui.theme.LightBlue
 import com.nezuko.domain.model.Audio
 import com.nezuko.domain.model.PlaybackState
+import kotlinx.coroutines.launch
 
 
 private val TAG = "ControlPlayingTrackScreen"
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ControlPlayingTrackScreen(
     onBackPressed: () -> Unit = {},
     playerServiceViewModel: PlayerServiceViewModel =
-        getGlobalViewModel(
-            viewModelClass = PlayerServiceViewModel::class.java,
-            PlayerServiceViewModelStoreOwner
-        )
+        getPlayerServiceViewModel()
 ) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val coroutineScope = rememberCoroutineScope()
+
+    CustomModalBottomSheet(
+        sheetState = sheetState,
+        coroutineScope = coroutineScope
+    )
+
     ControlPlayingTrackView(
-        audio = audio!!,
-        queue = queue!!,
         onBackPressed = onBackPressed,
-        onPopUpMenuClick = {},
+        onPopUpMenuClick = {
+            coroutineScope.launch {
+                Log.i(TAG, "ControlPlayingTrackScreen: ${sheetState.hasPartiallyExpandedState}")
+                sheetState.show()
+            }
+        },
         onPageChanged = { page ->
             playerServiceViewModel.updateQueueTrackId(page.toLong())
         }
     )
+
 }
 
 @Preview
 @Composable
 private fun ControlPlayingTrackView(
     audio: Audio = Audio(),
-    queue: ArrayList<Audio> = arrayListOf(),
     onBackPressed: () -> Unit = {},
     onPopUpMenuClick: () -> Unit = {},
     onPageChanged: (Int) -> Unit = {},
@@ -96,6 +108,7 @@ private fun ControlPlayingTrackView(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
+
     ) {
         Row(
             modifier = Modifier
@@ -146,7 +159,10 @@ private fun ControlPlayingTrackView(
                     .align(Alignment.CenterVertically)
                     .size(40.dp)
                     .background(Color.White)
-                    .clickable { onPopUpMenuClick.invoke() },
+                    .clickable {
+                        Log.i(TAG, "ControlPlayingTrackView: click")
+                        onPopUpMenuClick()
+                    },
                 painter = painterResource(id = R.drawable.dots),
                 contentDescription = "больше",
                 contentScale = ContentScale.Fit,
@@ -154,27 +170,36 @@ private fun ControlPlayingTrackView(
         }
 
         PagerBlock(
-            modifier = Modifier
+            imageModifier = Modifier
                 .padding()
                 .size(350.dp)
+                .border(2.dp, color = Color.Black)
                 .padding(30.dp)
+                .clip(RoundedCornerShape(20.dp)),
+            pagerModifier = Modifier
+                .fillMaxWidth()
                 .align(Alignment.CenterHorizontally)
-                .clip(RoundedCornerShape(20.dp))
-                .border(2.dp, color = Color.Black),
-            queue = queue,
-            onPageChanged = onPageChanged
+                .wrapContentWidth(Alignment.CenterHorizontally)
         )
+
+//        AsyncImage(
+//            model = audio.artUrl,
+//            error = painterResource(id = com.nezuko.data.R.drawable.img),
+//            contentDescription = "art",
+//            modifier = Modifier
+//                .padding()
+//                .size(350.dp)
+//                .border(2.dp, color = Color.Black)
+//                .padding(30.dp)
+//                .align(Alignment.CenterHorizontally)
+//                .clip(RoundedCornerShape(20.dp))
+//        )
 
         StateBlock()
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        Text(text = audio.title, modifier = Modifier.align(Alignment.CenterHorizontally))
-        Text(
-            text = audio.artist,
-            color = LightBlue,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
+        TitleBlock(modifier = Modifier.align(Alignment.CenterHorizontally))
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -182,14 +207,27 @@ private fun ControlPlayingTrackView(
     }
 }
 
+@Composable
+fun TitleBlock(
+    modifier: Modifier = Modifier,
+    playerServiceViewModel: PlayerServiceViewModel =
+        getPlayerServiceViewModel()
+) {
+    val audio by playerServiceViewModel.audio.observeAsState()
+
+    Text(text = audio!!.title, modifier = modifier)
+    Text(
+        text = audio!!.artist,
+        color = LightBlue,
+        modifier = modifier
+    )
+
+}
 
 @Composable
 fun StateBlock(
     playerServiceViewModel: PlayerServiceViewModel =
-        getGlobalViewModel(
-            viewModelClass = PlayerServiceViewModel::class.java,
-            PlayerServiceViewModelStoreOwner
-        )
+        getPlayerServiceViewModel()
 ) {
 
     val state by playerServiceViewModel.state.observeAsState()
@@ -275,10 +313,7 @@ private fun StateBlockView(
 private fun ButtonsBlock(
     modifier: Modifier = Modifier,
     playerServiceViewModel: PlayerServiceViewModel =
-        getGlobalViewModel(
-            viewModelClass = PlayerServiceViewModel::class.java,
-            storeOwner = PlayerServiceViewModelStoreOwner
-        )
+        getPlayerServiceViewModel()
 ) {
     val isPlaying by playerServiceViewModel.isPlaying.observeAsState()
 
@@ -309,7 +344,7 @@ private fun ButtonsBlockView(
     onNextClick: () -> Unit = {},
 ) {
     Log.i(TAG, "ButtonsBlockView: recomp")
-    val size = 80.dp
+    val size = 50.dp
     Row(modifier = modifier) {
         Image(
             modifier = Modifier
@@ -348,21 +383,63 @@ private fun ButtonsBlockView(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun PagerBlock(
-    modifier: Modifier = Modifier,
+    imageModifier: Modifier = Modifier,
+    pagerModifier: Modifier = Modifier,
     playerServiceViewModel: PlayerServiceViewModel =
-        getGlobalViewModel(
-            viewModelClass = PlayerServiceViewModel::class.java,
-            storeOwner = PlayerServiceViewModelStoreOwner
-        )
+        getPlayerServiceViewModel()
 ) {
-    AsyncImage(
-        model = audio.artUrl,
-        error = painterResource(id = com.nezuko.data.R.drawable.img),
-        contentDescription = "art",
-        modifier = Modifier.focusModifier()
-    )
+    val queue by playerServiceViewModel.queue.observeAsState()
+    val trackId by playerServiceViewModel.currentQueueTrackId.observeAsState()
+    var isFirst = true
+
+    val pagerState =
+        rememberPagerState(
+            pageCount = { queue?.size ?: 0 },
+            initialPage = (trackId ?: 0).toInt()
+        )
+    val coroutineScope = rememberCoroutineScope()
+
+
+    Log.i(TAG, "SearchScreen: recomp")
+
+    LaunchedEffect(trackId) {
+        coroutineScope.launch {
+            if (trackId == null) return@launch
+            pagerState.animateScrollToPage(trackId!!.toInt())
+        }
+    }
+
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.settledPage }.collect { page ->
+            Log.i(TAG, "SearchScreen: pager updated")
+            if (isFirst) {
+                isFirst = false
+            } else {
+                playerServiceViewModel.updateQueueTrackId(page.toLong())
+            }
+        }
+    }
+
+
+    HorizontalPager(
+        state = pagerState,
+    ) { page: Int ->
+        Box(modifier = pagerModifier) {
+            AsyncImage(
+                model = queue!![page].artUrl,
+                error = painterResource(id = com.nezuko.data.R.drawable.img),
+                contentDescription = "art",
+                modifier = imageModifier
+                    .wrapContentWidth(Alignment.CenterHorizontally)
+
+            )
+        }
+    }
+
+
 }
 
 

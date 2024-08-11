@@ -9,7 +9,10 @@ import com.nezuko.composeplayer.app.ui.screens.mainScreen.MainScreen
 import com.nezuko.composeplayer.app.ui.screens.startScreen.StartScreen
 import com.nezuko.composeplayer.app.ui.screens.startScreen.loginScreen.LoginScreen
 import com.nezuko.composeplayer.app.ui.screens.startScreen.registerScreen.RegisterScreen
+import com.nezuko.composeplayer.app.ui.screens.startScreen.registerScreen.registerProfileScreen.RegisterProfileScreen
 import com.nezuko.composeplayer.app.utils.ShowMainFeature
+import com.nezuko.domain.model.UserProfile
+import org.koin.androidx.compose.get
 
 fun NavGraphBuilder.start(
     onSignInCLick: () -> Unit = {},
@@ -34,14 +37,30 @@ fun NavController.navigateToSignUpScreen() {
 }
 
 
-fun NavGraphBuilder.signIn(onAuthComplete: (String) -> Unit) {
+fun NavGraphBuilder.signIn(
+    onAuthComplete: (String) -> Unit
+) {
     composable(RoutesNames.SIGN_IN_SCREEN) {
-        LoginScreen(onAuthComplete)
+        LoginScreen(onAuthComplete, )
     }
 }
 
-fun NavGraphBuilder.signUp(onAuthComplete: (String) -> Unit) {
+fun NavGraphBuilder.signUp(
+    onNavigateToRegisterProfileScreen: () -> Unit
+) {
     composable(RoutesNames.SIGN_UP_SCREEN) {
-        RegisterScreen(onAuthComplete)
+        RegisterScreen(onNavigateToRegisterProfileScreen)
     }
+}
+
+fun NavGraphBuilder.registerProfile(
+    onAuthComplete: (String) -> Unit = {},
+    ) {
+    composable(RoutesNames.REGISTER_PROFILE_SCREEN) {
+        RegisterProfileScreen(onAuthComplete)
+    }
+}
+
+fun NavController.navigateToRegisterProfileScreen() {
+    navigate(RoutesNames.REGISTER_PROFILE_SCREEN)
 }

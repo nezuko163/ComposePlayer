@@ -162,7 +162,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
                 )
 //                val thread = Thread(playerPosition)
 //                Thread(Player) start ()
-//                refreshNotification()
+                refreshNotification()
 
             }
         }
@@ -302,7 +302,6 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
             playbackStateBuilder.setState(state, playbackPosition, playbackSpeed)
             mediaSession.setPlaybackState(playbackStateBuilder.build())
         } catch (e: Exception) {
-            e.printStackTrace()
         }
     }
 
@@ -319,6 +318,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
     }
 
     private fun refreshNotification() {
+        Log.i(TAG, "refreshNotification: player.isPlaying = ${player.isPlaying()}")
         val builder = NotificationHelper.notificationBuilder(
             applicationContext,
             mediaSession,

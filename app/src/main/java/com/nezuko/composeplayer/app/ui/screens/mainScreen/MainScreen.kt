@@ -17,6 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import com.nezuko.composeplayer.app.ui.viewmodels.UserViewModel
+import com.nezuko.composeplayer.app.ui.viewmodels.getUserViewModel
 import org.koin.androidx.compose.koinViewModel
 
 private const val TAG = "MAIN_SCREEN"
@@ -24,8 +26,10 @@ private const val TAG = "MAIN_SCREEN"
 
 @Preview
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun MainScreen(modifier: Modifier = Modifier, uvm: UserViewModel = getUserViewModel()) {
     SetFields(modifier = modifier)
+    Log.i(TAG, "SetFields: ${uvm.userProfile.value}")
+
 }
 
 @Composable
@@ -33,6 +37,7 @@ private fun SetFields(modifier: Modifier, vm: NumbersViewModel = koinViewModel()
     val numb1 by vm.numb1.observeAsState()
     val numb2 by vm.numb2.observeAsState()
     val sum by vm.sum.observeAsState()
+
     Column(modifier = modifier) {
         OutlinedTextField(
             value = if (numb1 != null) numb1.toString() else "",

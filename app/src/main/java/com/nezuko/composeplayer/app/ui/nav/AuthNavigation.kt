@@ -6,14 +6,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.nezuko.composeplayer.app.ui.screens.startScreen.destinations.navigateToRegisterProfileScreen
 import com.nezuko.composeplayer.app.ui.screens.startScreen.destinations.navigateToSignInScreen
 import com.nezuko.composeplayer.app.ui.screens.startScreen.destinations.navigateToSignUpScreen
+import com.nezuko.composeplayer.app.ui.screens.startScreen.destinations.registerProfile
 import com.nezuko.composeplayer.app.ui.screens.startScreen.destinations.signIn
 import com.nezuko.composeplayer.app.ui.screens.startScreen.destinations.signUp
 import com.nezuko.composeplayer.app.ui.screens.startScreen.destinations.start
 
 @Composable
-fun AuthNavigation(navHostController: NavHostController, modifier: Modifier = Modifier, onAuthComplete: (String) -> Unit) {
+fun AuthNavigation(
+    navHostController: NavHostController,
+    modifier: Modifier = Modifier,
+    onAuthComplete: (String) -> Unit,
+) {
     NavHost(
         navController = navHostController,
         startDestination = RoutesNames.START_SCREEN,
@@ -35,6 +41,12 @@ fun AuthNavigation(navHostController: NavHostController, modifier: Modifier = Mo
 
         signIn(onAuthComplete)
 
-        signUp(onAuthComplete)
+        signUp(
+            onNavigateToRegisterProfileScreen = {
+                navHostController.navigateToRegisterProfileScreen()
+            }
+        )
+
+        registerProfile(onAuthComplete)
     }
 }

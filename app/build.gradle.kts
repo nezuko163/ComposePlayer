@@ -23,7 +23,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -83,7 +83,10 @@ dependencies {
     implementation(libs.material3)
     runtimeOnly(libs.androidx.material3.vlatestversion)
 
-
     // coil compose
     implementation(libs.coil.compose)
+
+    // Image Crop
+    implementation(libs.croppy)
+
 }

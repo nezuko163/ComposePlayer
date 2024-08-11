@@ -1,6 +1,7 @@
 package com.nezuko.composeplayer.app.ui.viewmodels
 
 import android.util.Log
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import com.nezuko.composeplayer.app.utils.getGlobalViewModel
 import com.nezuko.domain.callback.ConnectionCallbackInterface
 import com.nezuko.domain.callback.ControllerCallbackInterface
 import com.nezuko.domain.model.Audio
@@ -157,3 +159,9 @@ object PlayerServiceViewModelStoreOwner : ViewModelStoreOwner {
     override val viewModelStore: ViewModelStore
         get() = _viewModelStore
 }
+
+@Composable
+fun getPlayerServiceViewModel() = getGlobalViewModel(
+    viewModelClass = PlayerServiceViewModel::class.java,
+    storeOwner = PlayerServiceViewModelStoreOwner
+)

@@ -3,12 +3,16 @@ package com.nezuko.composeplayer.app.di
 import com.nezuko.data.repositoryImpl.AuthRepositoryImpl
 import com.nezuko.data.repositoryImpl.PlayerRepositoryImpl
 import com.nezuko.data.repositoryImpl.PlaylistRepositoryImpl
-import com.nezuko.domain.repository.PlayerRepository
+import com.nezuko.data.repositoryImpl.UserProfileRepositoryImpl
 import com.nezuko.domain.usecase.AddQueueItemUseCase
+import com.nezuko.domain.usecase.CheckIsEmailFreeUseCase
 import com.nezuko.domain.usecase.ClearQueueUseCase
 import com.nezuko.domain.usecase.GetAllLocalTracksUseCase
 import com.nezuko.domain.usecase.GetCurrentUserIDUseCase
+import com.nezuko.domain.usecase.GetImageFromStorageByNameUseCase
+import com.nezuko.domain.usecase.GetImageFromStorageByUrlUseCase
 import com.nezuko.domain.usecase.GetTrackListByPlaylistIdUseCase
+import com.nezuko.domain.usecase.GetUserProfileByUIDUseCase
 import com.nezuko.domain.usecase.InitializeAppUseCase
 import com.nezuko.domain.usecase.LoginViaEmailAndPasswordUseCase
 import com.nezuko.domain.usecase.NextTrackUseCase
@@ -18,8 +22,10 @@ import com.nezuko.domain.usecase.PauseUseCase
 import com.nezuko.domain.usecase.PlayOrPauseUseCase
 import com.nezuko.domain.usecase.PlayUseCase
 import com.nezuko.domain.usecase.PreviousTrackUseCase
+import com.nezuko.domain.usecase.RegisterUserProfileUseCase
 import com.nezuko.domain.usecase.RegisterViaEmailAndPasswordUseCase
 import com.nezuko.domain.usecase.SeekToUseCase
+import com.nezuko.domain.usecase.SetAvatarToUserUseCase
 import com.nezuko.domain.usecase.SetPlayerCallbacksUseCase
 import com.nezuko.domain.usecase.SkipToQueueItemUseCase
 import com.nezuko.domain.usecase.StopUseCase
@@ -36,6 +42,7 @@ val domainModule = module {
 //        PlayMusicUseCase(playerRepository = get<PlayerRepositoryImpl>())
 //    }
 
+    // Firebase Auth
     factory<GetCurrentUserIDUseCase> {
         GetCurrentUserIDUseCase(impl = get<AuthRepositoryImpl>())
     }
@@ -58,6 +65,32 @@ val domainModule = module {
 
     factory<InitializeAppUseCase> {
         InitializeAppUseCase(impl = get<AuthRepositoryImpl>())
+    }
+
+    factory<CheckIsEmailFreeUseCase> {
+        CheckIsEmailFreeUseCase(impl = get<AuthRepositoryImpl>())
+    }
+
+
+    // UserProfileRepository
+    factory<RegisterUserProfileUseCase> {
+        RegisterUserProfileUseCase(impl = get<UserProfileRepositoryImpl>())
+    }
+
+    factory<GetUserProfileByUIDUseCase> {
+        GetUserProfileByUIDUseCase(impl = get<UserProfileRepositoryImpl>())
+    }
+
+    factory<SetAvatarToUserUseCase> {
+        SetAvatarToUserUseCase(impl = get<UserProfileRepositoryImpl>())
+    }
+
+    factory<GetImageFromStorageByUrlUseCase> {
+        GetImageFromStorageByUrlUseCase(impl = get<UserProfileRepositoryImpl>())
+    }
+
+    factory<GetImageFromStorageByNameUseCase> {
+        GetImageFromStorageByNameUseCase(impl = get<UserProfileRepositoryImpl>())
     }
 
     // PlayerRepository

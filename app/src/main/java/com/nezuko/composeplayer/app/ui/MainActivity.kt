@@ -20,6 +20,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.compose.rememberNavController
 import com.nezuko.composeplayer.app.ui.viewmodels.PlayerServiceViewModel
 import com.nezuko.composeplayer.app.ui.viewmodels.PlayerServiceViewModelStoreOwner
+import com.nezuko.composeplayer.app.ui.viewmodels.getPlayerServiceViewModel
 import com.nezuko.composeplayer.app.utils.Permission2
 import com.nezuko.composeplayer.app.utils.getGlobalViewModel
 import com.nezuko.composeplayer.ui.theme.ComposePlayerTheme
@@ -43,11 +44,7 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
-            playerServiceViewModel =
-                getGlobalViewModel(
-                    viewModelClass = PlayerServiceViewModel::class.java,
-                    PlayerServiceViewModelStoreOwner
-                )
+            playerServiceViewModel = getPlayerServiceViewModel()
             playerServiceViewModel.onStart()
             ComposePlayerTheme {
                 val navController = rememberNavController()

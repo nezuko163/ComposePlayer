@@ -50,6 +50,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.google.firebase.auth)
     implementation(libs.firebase.database)
+    implementation(libs.firebase.storage)
 
     // coroutines
     implementation(libs.kotlinx.coroutines.android)
