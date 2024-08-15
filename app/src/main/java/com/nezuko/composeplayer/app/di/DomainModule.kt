@@ -7,6 +7,8 @@ import com.nezuko.data.repositoryImpl.UserProfileRepositoryImpl
 import com.nezuko.domain.usecase.AddQueueItemUseCase
 import com.nezuko.domain.usecase.CheckIsEmailFreeUseCase
 import com.nezuko.domain.usecase.ClearQueueUseCase
+import com.nezuko.domain.usecase.DisableOnlineModeUseCase
+import com.nezuko.domain.usecase.EnableOnlineModeUseCase
 import com.nezuko.domain.usecase.GetAllLocalTracksUseCase
 import com.nezuko.domain.usecase.GetCurrentUserIDUseCase
 import com.nezuko.domain.usecase.GetImageFromStorageByNameUseCase
@@ -69,6 +71,14 @@ val domainModule = module {
 
     factory<CheckIsEmailFreeUseCase> {
         CheckIsEmailFreeUseCase(impl = get<AuthRepositoryImpl>())
+    }
+
+    factory<DisableOnlineModeUseCase> {
+        DisableOnlineModeUseCase(impl = get<AuthRepositoryImpl>())
+    }
+
+    factory<EnableOnlineModeUseCase> {
+        EnableOnlineModeUseCase(impl = get<AuthRepositoryImpl>())
     }
 
 

@@ -6,8 +6,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.lyrebirdstudio.croppylib.Croppy
-import com.lyrebirdstudio.croppylib.main.CroppyActivity
 
 @Composable
 fun galleryLauncher(

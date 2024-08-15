@@ -6,6 +6,8 @@ import com.nezuko.composeplayer.app.di.appModule
 import com.nezuko.composeplayer.app.di.corouitinesModule
 import com.nezuko.composeplayer.app.di.dataModule
 import com.nezuko.composeplayer.app.di.domainModule
+import com.nezuko.data.utils.isOnline
+import com.nezuko.domain.usecase.EnableOnlineModeUseCase
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin

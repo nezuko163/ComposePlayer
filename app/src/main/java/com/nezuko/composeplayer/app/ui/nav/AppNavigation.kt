@@ -67,6 +67,10 @@ fun AppNavigation(navHostController: NavHostController, modifier: Modifier) {
             onBackedPressedDispatcher.onBackPressed()
         })
 
-        profile()
+        profile(
+             onNaviagetToCropImageScreen = { uri: Uri ->
+                navHostController.navigateToCropImageScreen(uri)
+            }
+        )
     }
 }

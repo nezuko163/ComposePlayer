@@ -3,7 +3,6 @@ package com.nezuko.domain.model
 data class UserProfile(
     val id: String="",
     val userName: String="",
-    var artUrlCropped: String = "",
     var artUrl: String = "",
     var backgroundArtUrl: String = "",
     val likedTracks: List<Long> = listOf(),
@@ -13,7 +12,6 @@ data class UserProfile(
         mapOf(
             "id" to id,
             "userName" to userName,
-            "artUrlCropped" to artUrlCropped,
             "artUrl" to artUrl,
             "backgroundArtUrl" to backgroundArtUrl,
             "likedTracks" to likedTracks,

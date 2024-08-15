@@ -45,6 +45,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import com.nezuko.composeplayer.R
 import com.nezuko.composeplayer.app.ui.viewmodels.UserViewModel
@@ -59,12 +60,13 @@ private val TAG = "PROFILE_SCREEN"
 
 @Composable
 fun Profile(
-    modifier: Modifier = Modifier,
     uid: String,
     userViewModel: UserViewModel = getUserViewModel(),
-    profileViewModel: ProfileViewModel = koinViewModel()
+    profileViewModel: ProfileViewModel = getProfileViewModel(),
+    onNaviagetToCropImageScreen: (uri: Uri) -> Unit
 ) {
     val user by profileViewModel.user.observeAsState()
+    val uri by profileViewModel.uri.observeAsState()
 
     var errorMessage by remember { mutableStateOf("") }
     var loading by remember { mutableStateOf(true) }
@@ -73,6 +75,16 @@ fun Profile(
     val context = LocalContext.current
     val onBackPressedDispatcher = (context as ComponentActivity).onBackPressedDispatcher
     val onBackPressed = { onBackPressedDispatcher.onBackPressed() }
+
+    LaunchedEffect(uri) {
+        if (user == null || uri == null || uri.toString().isEmpty()) return@LaunchedEffect
+        if (user!!.artUrl == uri.toString()) return@LaunchedEffect
+        Log.i(TAG, "Profile: uri = $uri")
+        userViewModel.setAvatarToUser(uri!!, onSuccess = {
+            Toast.makeText(context, "аватарка изменена", Toast.LENGTH_SHORT).show()
+        })
+        profileViewModel.updateImage(null)
+    }
 
     LaunchedEffect(uid) {
         if (uid == userViewModel.uid.value) {
@@ -117,8 +129,7 @@ fun Profile(
                 Log.i(TAG, "Profile: aue")
                 val launcher = galleryLauncher { uri ->
                     if (uri == null) return@galleryLauncher
-                    userViewModel.setAvatarToUser(uri, onSuccess = { artUrl ->
-                        profileViewModel.updateUser(user!!.copy(artUrl = artUrl)) })
+                    onNaviagetToCropImageScreen(uri)
                 }
                 onAvatarClick = {
                     Log.i(TAG, "Profile: click")
@@ -152,7 +163,7 @@ private fun ProfileScreen(
     val scrollState = rememberScrollState()
 
     Log.i(TAG, "ProfileScreen: ${user.artUrl}")
-    
+
     Scaffold(
         modifier = Modifier,
         topBar = {

@@ -29,6 +29,7 @@ materialVersion = "1.6.8"
 navigationCompose = "2.7.7"
 
 # LivaData Compose
+photoview = "2.3.0"
 runtimeLivedata = "1.6.7"
 
 # MediaService
@@ -40,6 +41,7 @@ media = "1.7.0"
 googleGmsGoogleServices = "4.4.2"
 firebaseAuth = "23.0.0"
 constraintlayout = "2.1.4"
+ucrop = "2.2.8"
 
 
 [libraries]
@@ -85,6 +87,8 @@ androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedat
 # compose nav
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
+photoview = { module = "com.github.chrisbanes:PhotoView", version.ref = "photoview" }
+ucrop = { module = "com.github.yalantis:ucrop", version.ref = "ucrop" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -9,6 +9,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.nezuko.domain.repository.AuthRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -155,5 +156,14 @@ class AuthRepositoryImpl(
 
     override fun initializeApp() {
         FirebaseApp.initializeApp(context)
+        Firebase.database.setPersistenceEnabled(true)
+    }
+
+    override fun enableOnlineMode() {
+        Firebase.database.goOnline()
+    }
+
+    override fun disableOnlineMode() {
+        Firebase.database.goOffline()
     }
 }

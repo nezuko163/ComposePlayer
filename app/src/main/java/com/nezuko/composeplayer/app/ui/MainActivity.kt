@@ -22,7 +22,6 @@ import com.nezuko.composeplayer.app.ui.viewmodels.PlayerServiceViewModel
 import com.nezuko.composeplayer.app.ui.viewmodels.PlayerServiceViewModelStoreOwner
 import com.nezuko.composeplayer.app.ui.viewmodels.getPlayerServiceViewModel
 import com.nezuko.composeplayer.app.utils.Permission2
-import com.nezuko.composeplayer.app.utils.getGlobalViewModel
 import com.nezuko.composeplayer.ui.theme.ComposePlayerTheme
 
 

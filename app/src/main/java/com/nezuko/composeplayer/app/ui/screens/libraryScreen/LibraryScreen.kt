@@ -69,7 +69,7 @@ fun LibraryScreen(
                         .clip(CircleShape)
                 ) {
                     ImageFromFirebaseStorage(
-                        imageUrl = user!!.artUrl,
+                        imageUrl = user?.artUrl ?: "",
                         errorImageResource = R.drawable.left,
                         contentDescription = "ава")
                 }

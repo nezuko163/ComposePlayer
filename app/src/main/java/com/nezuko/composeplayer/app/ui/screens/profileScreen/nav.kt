@@ -1,5 +1,6 @@
 package com.nezuko.composeplayer.app.ui.screens.profileScreen
 
+import android.net.Uri
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -15,13 +16,15 @@ fun NavController.navigateToProfileScreen(uid: String) {
     navigate("${RoutesNames.PROFILE_SCREEN}/$uid")
 }
 
-fun NavGraphBuilder.profile() {
+fun NavGraphBuilder.profile(
+    onNaviagetToCropImageScreen: (Uri) -> Unit
+) {
     composable(
         route = "${RoutesNames.PROFILE_SCREEN}/{$USER_ID}"
     ) {
         val arguments = requireNotNull(it.arguments)
         val id = arguments.getString(USER_ID) ?: return@composable
 
-        Profile(uid = id)
+        Profile(uid = id, onNaviagetToCropImageScreen = onNaviagetToCropImageScreen)
     }
 }

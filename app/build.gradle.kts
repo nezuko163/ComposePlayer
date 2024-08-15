@@ -87,6 +87,6 @@ dependencies {
     implementation(libs.coil.compose)
 
     // Image Crop
-    implementation(libs.croppy)
+    implementation(libs.ucrop)
 
 }

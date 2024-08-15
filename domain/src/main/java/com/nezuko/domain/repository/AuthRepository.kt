@@ -40,4 +40,7 @@ interface AuthRepository {
     suspend fun getCurrentUserID(): Result<String>
 
     fun initializeApp()
+
+    fun enableOnlineMode()
+    fun disableOnlineMode()
 }
